@@ -1,21 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.home-container__text {
+  font-size: 10rem;
+  transition: all 100ms ease;
+}
+
+@media screen and (max-width: 860px){
+  .home-container__text {
+    font-size: 7rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@media screen and (max-width: 460px){
+  .home-container__text {
+    font-size: 4rem;
+  }
+}
+
+@media screen and (max-width: 260px){
+  .home-container__text {
+    font-size: 2rem;
+  }
 }
