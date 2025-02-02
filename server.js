@@ -8,6 +8,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const users = {};
+const calls = {};
 
 app.prepare().then(() => {
     const server = createServer((req, res) => {
@@ -20,10 +21,19 @@ app.prepare().then(() => {
     io.on('connection', (socket) => {
         console.log('A client connected');
 
-        users[socket.id] = 
+
+        socket.on('online', (data) => {
+            if(data.id) {
+                users[socket.id] = data.id;
+                calls[data.id] = socket.id;
+                console.log(`A user (id: ${data.id}) connected`);
+                console.log(`Created/Updated ${data.id} userid room to calls [roomid: ${socket.id}]`);
+            }
+        })
 
         socket.on('disconnect', () => {
             console.log('A client disconnected');
+            delete users[socket.id];
         });
     });
 

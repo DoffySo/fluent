@@ -1,39 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "tailwindcss";
 
 body {
-  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", "Geist", "Inter", Arial, Helvetica, sans-serif!important;
 }
 
 * {
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
-}
-
-.home-container__text {
-  font-size: 10rem;
-  transition: all 100ms ease;
-}
-
-@media screen and (max-width: 860px){
-  .home-container__text {
-    font-size: 7rem;
-  }
-}
-
-@media screen and (max-width: 460px){
-  .home-container__text {
-    font-size: 4rem;
-  }
-}
-
-@media screen and (max-width: 260px){
-  .home-container__text {
-    font-size: 2rem;
-  }
 }
