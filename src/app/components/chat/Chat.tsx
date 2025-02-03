@@ -1,16 +1,88 @@
 "use client"
 import {useState} from "react";
+import {Icon} from "@iconify/react";
+import {useChatStore} from "@/app/stores/chat";
+import Image from 'next/image'
+import TextareaAutosize from 'react-textarea-autosize';
 
 export default function Chat({chatid}: {chatid?: number}) {
     const [selectedChat, setSelectedChat] = useState<number | null>(null);
 
+    const setCurrentChatId = useChatStore(state => state.setId)
+
     return (
         <>
-            { selectedChat &&
-            <div className="chat min-w-full w-full sm:border-l h-full border-gray-200">
-                chat
+
+            <div className="chat w-full sm:border-l h-full border-gray-200">
+                { chatid &&
+                    <div className="chat-container flex flex-col w-full h-full relative hover:cursor-default">
+
+                        <div className="chat-header w-full border-b border-gray-200 h-16 absolute z-[5000] top-0 bg-white/30 backdrop-blur-[3px] text-neutral-900">
+                            <div className="chat-header__container w-full h-full flex px-1 gap-2">
+                                <div className="back my-auto p-1 h-fit w-fit items-center flex hover:cursor-pointer hover:bg-neutral-400/30 rounded-full" onClick={() => setCurrentChatId(null)}>
+                                    <Icon icon="fluent:chevron-left-48-filled" width="28" height="28" />
+                                    <div className="badge -ml-1 bg-gray-400 px-1.5 text-xs font-medium text-white rounded-full flex md:hidden">
+                                        10
+                                    </div>
+                                </div>
+                                <div className="user h-full w-full flex items-center gap-2">
+                                    <div className="user-avatar h-10 w-10 flex">
+                                        <div className="avatar w-full h-full rounded-full">
+                                            <Image
+                                                className={"w-full h-full rounded-full hover:cursor-pointer"}
+                                                src={"https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png"}
+                                                alt={""}
+                                                width={42}
+                                                height={42}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="user-info flex flex-col h-12 w-fit font-medium">
+                                        <span className="username">
+                                            Username
+                                        </span>
+                                        <span className="status text-sm text-gray-500">
+                                            status
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="chat-content w-full h-full">
+                            <div className="chat-content__container px-1">
+                                    Text12321321
+                            </div>
+                        </div>
+
+                        <div className="chat-footer w-full border-t border-gray-200 min-h-16 h-auto bg-white/30 absolute z-[5000] bottom-0 backdrop-blur-[3px] items-center flex">
+                            <div className="chat-footer__container px-1 flex gap-2 items-center h-full w-full">
+                                <div className="btn attach flex hover:cursor-pointer hover:bg-neutral-400/30 p-1 rounded-full">
+                                    <Icon icon="fluent:attach-48-filled" width="24" height="24" />
+                                </div>
+                                <div className="search w-full flex mx-1 hover:cursor-pointer">
+                                    <div className="search-container w-full flex items-center">
+                                        <TextareaAutosize placeholder={"Message"} rows={3} maxRows={6} className={"resize-none outline-none w-full"} />
+                                    </div>
+                                </div>
+                                <div className="sheduled flex mx-1 hover:cursor-pointer">
+                                    <Icon icon="fluent:clock-bill-24-filled" width="24" height="24" />
+                                </div>
+                                <div className="sticker flex mx-1 hover:cursor-pointer">
+                                    <Icon icon="fluent:sticker-24-regular" width="24" height="24" />
+                                </div>
+                                <div className="record-message flex mx-1 hover:cursor-pointer">
+                                    <Icon icon="fluent:mic-48-regular" width="24" height="24" />
+                                </div>
+                                <div className="send flex mx-1 hover:cursor-pointer">
+                                    <Icon icon="fluent:send-24-filled" width="24" height="24" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-            }
+
         </>
     )
 }

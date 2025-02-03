@@ -9,7 +9,7 @@ export default function Sidebar({collapsed}: {collapsed?: boolean}) {
 
     return (
         <>
-            <div className="sidebar w-full sm:border-r h-full border-gray-200">
+            <div className="sidebar w-full md:border-r md:w-1/3 h-full border-gray-200">
                 <div className="sidebar-container w-full h-full flex flex-col gap-1">
                     <ul className="chat-list flex flex-col gap-1">
                         <div>Chat Id: {chatId}</div>

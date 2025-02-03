@@ -6,40 +6,23 @@ import Chat from '@/app/components/chat/Chat'
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels";
 import {useState} from "react";
 import {useChatStore} from "@/app/stores/chat";
+import {useViewport} from "@/app/hooks/useViewport";
 
 export default function App() {
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
     const chatId = useChatStore(state => state.id)
+    const { isMobile, isTablet, isDesktop } = useViewport();
 
     return (
         <>
             <header>
                 <title>Fluent</title>
             </header>
-            <div className="wrapper flex items-center w-full h-screen gap-6">
-                <PanelGroup autoSaveId="chatResizeble" direction="horizontal">
-                    <Panel
-                        onCollapse={() => setSidebarCollapsed(true)}
-                        onExpand={() => setSidebarCollapsed(false)}
-                        defaultSize={25}
-                        minSize={15}
-                        maxSize={50}
-                        collapsible={true}
-                        collapsedSize={8}
-                        className={`${chatId ? 'hidden sm:flex' : ""}`}
-                    >
-                        <Sidebar collapsed={sidebarCollapsed} />
-                    </Panel>
-                    <PanelResizeHandle />
-                    <Panel
-                        defaultSize={75}
-                        minSize={50}
-                        maxSize={100}
-                        className={`${chatId ? '' : "hidden sm:flex"}`}>
-                        <Chat />
-                    </Panel>
-                </PanelGroup>
+            <div className="wrapper flex items-center w-full h-screen">
+                {((!chatId && isMobile) || isDesktop || isTablet) && <Sidebar collapsed={sidebarCollapsed} />}
+                {(chatId || isDesktop || isTablet) && <Chat chatid={chatId} />}
+
             </div>
         </>
 
