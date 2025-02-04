@@ -4,11 +4,34 @@ import {Icon} from "@iconify/react";
 import {useChatStore} from "@/app/stores/chat";
 import Image from 'next/image'
 import TextareaAutosize from 'react-textarea-autosize';
+import {ChatContext} from "@/app/components/chat/ChatContext";
+
+const initialContextMenu = {
+    show: false,
+    x: 0,
+    y: 0,
+}
 
 export default function Chat({chatid}: {chatid?: number}) {
     const [selectedChat, setSelectedChat] = useState<number | null>(null);
+    const [contextMenu, setContextMenu] = useState(initialContextMenu);
 
     const setCurrentChatId = useChatStore(state => state.setId)
+
+    function handleContextMenu(e) {
+        e.preventDefault();
+        console.log(e)
+
+        const {pageX, pageY} = e;
+        const {clientX, clientY} = e;
+        const {offsetWidth, offsetHeight} = e.target;
+
+        setContextMenu({show: true, x: clientX , y: clientY});
+    }
+    function closeContextMenu() {
+        console.log(1)
+        setContextMenu({show: false, x: 0, y: 0});
+    }
 
     return (
         <>
@@ -50,7 +73,10 @@ export default function Chat({chatid}: {chatid?: number}) {
                         </div>
 
                         <div className="chat-content w-full h-full">
-                            <div className="chat-content__container px-1">
+                            <div
+                                onContextMenu={handleContextMenu}
+                                className="chat-content__container px-1 h-full w-full flex">
+                                    {contextMenu.show && <ChatContext chatid={chatid} x={contextMenu.x} y={contextMenu.y} closeContextMenu={closeContextMenu}/>}
                                     Text12321321
                             </div>
                         </div>
