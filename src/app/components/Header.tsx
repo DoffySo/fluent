@@ -31,7 +31,7 @@ export default function Header() {
             <div className="header-container w-full max-w-[1200px] mx-auto h-20 flex items-center justify-between">
                 <div className="left links flex gap-4 h-16">
                     <div className="logo flex items-center w-24">
-                        <Link className="link text-neutral-900 flex items-center my-auto font-extrabold text-2xl" href={""}>Fluent</Link>
+                        <Link className="link text-neutral-900 flex items-center my-auto font-extrabold text-2xl" href={"/"}>Fluent</Link>
                     </div>
                     <ul className="links hidden md:flex items-center gap-3 text-sm text-gray-500">
                         {

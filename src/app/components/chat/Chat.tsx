@@ -1,10 +1,12 @@
 "use client"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Icon} from "@iconify/react";
 import {useChatStore} from "@/app/stores/chat";
 import Image from 'next/image'
 import TextareaAutosize from 'react-textarea-autosize';
 import {ChatContext} from "@/app/components/chat/ChatContext";
+import Avatar from "@/app/components/Avatar";
+import {decryptMessage, encryptMessage, generateRSAKeys} from "@/app/lib/crypto";
 
 const initialContextMenu = {
     show: false,
@@ -15,6 +17,8 @@ const initialContextMenu = {
 export default function Chat({chatid}: {chatid?: number}) {
     const [selectedChat, setSelectedChat] = useState<number | null>(null);
     const [contextMenu, setContextMenu] = useState(initialContextMenu);
+
+
 
     const setCurrentChatId = useChatStore(state => state.setId)
 
@@ -31,6 +35,15 @@ export default function Chat({chatid}: {chatid?: number}) {
     function closeContextMenu() {
         console.log(1)
         setContextMenu({show: false, x: 0, y: 0});
+    }
+
+    async function genRSA() {
+        const {publicKey, privateKey} = await generateRSAKeys();
+        const message = "Hello, World!"
+        const encryptedMessage = await encryptMessage(message, publicKey);
+        const decryptedMessage = await decryptMessage(encryptedMessage, privateKey);
+        console.log(`Public Key: \n${publicKey}\n\nPrivate Key: \n${privateKey}`);
+        console.log(`Encrypted Message: \n${encryptedMessage}\n\nDecrypted Message: \n${decryptedMessage}`);
     }
 
     return (
@@ -50,15 +63,7 @@ export default function Chat({chatid}: {chatid?: number}) {
                                 </div>
                                 <div className="user h-full w-full flex items-center gap-2">
                                     <div className="user-avatar h-10 w-10 flex">
-                                        <div className="avatar w-full h-full rounded-full">
-                                            <Image
-                                                className={"w-full h-full rounded-full hover:cursor-pointer"}
-                                                src={"https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png"}
-                                                alt={""}
-                                                width={42}
-                                                height={42}
-                                            />
-                                        </div>
+                                        <Avatar fallbackLetters={"U"} src={"https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png"} width={40} height={40} />
                                     </div>
                                     <div className="user-info flex flex-col h-12 w-fit font-medium">
                                         <span className="username">

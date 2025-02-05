@@ -1,11 +1,37 @@
+import Image from "next/image";
 
+interface AvatarProps {
+    src: string | ""
+    alt: string | "Avatar"
+    width: number | 46
+    height: number | 46
+    fallbackLetters: string
+}
 
-export default function Avatar(props: {}) {
+// Template image
+// https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png
+
+export default function Avatar({src, alt, width, height, fallbackLetters}: AvatarProps) {
 
     return (
         <>
-            <div className="avatar flex justify-center items-center h-full w-full bg-linear-160 from-indigo-100 to-indigo-300 mx-auto my-auto rounded-full font-medium text-neutral-100">
-                DS
+            <div className="avatar w-full h-full rounded-full">
+                {src &&
+                <Image
+                    className={"w-full h-full rounded-full hover:cursor-pointer"}
+                    src={src}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                />
+                }
+                {!src &&
+                    <div className="avatar w-full h-full rounded-full bg-neutral-200 flex justify-center items-center">
+                        <span className={"font-extrabold text-sm"}>
+                            {fallbackLetters}
+                        </span>
+                    </div>
+                }
             </div>
         </>
     )

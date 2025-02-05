@@ -16,7 +16,7 @@ export default function ChatItem({chatid, collapsed, name, text, folders} : {cha
             <div onClick={()=>selectChat(chatid)} className="chatitem flex w-full h-18 cursor-default bg-neutral-50 hover:bg-neutral-200 active:bg-neutral-200 px-1 rounded-md">
                 <div className="chatitem-container w-full h-full flex my-auto">
                     <div className={`avatar-container min-w-16 w-16 h-16 flex p-2 my-auto ${collapsed ? "mx-auto md:w-16 md:h-16 lg:w-18 lg:h-18 sm:h-12 sm:w-12" : ""}`}>
-                        <Avatar />
+                        <Avatar fallbackLetters={"CH"} />
                     </div>
                     { !collapsed &&
                     <div className="content-container w-full h-18 border-b border-gray-300 flex flex-col overflow-x-hidden text-ellipsis">
