@@ -36,7 +36,7 @@ export default function Header() {
                     <ul className="links hidden md:flex items-center gap-3 text-sm text-gray-500">
                         {
                             links.map(link =>
-                            <li>
+                            <li key={link.id} className="flex items-center">
                                 <Link className="link text-neutral-500 flex items-center hover:text-gray-700 duration-100" key={link.id} href={link.href}>
                                     {link.text}
                                 </Link>
