@@ -1,7 +1,7 @@
 'use server'
 
-import {Prisma, PrismaClient} from "@prisma/client"
-const prisma = new PrismaClient()
+import {Prisma} from "@prisma/client"
+import {prisma} from "@/app/lib/prisma"
 import bcrypt from "bcrypt"
 const saltRounds = 10;
 
@@ -16,12 +16,9 @@ export async function POST(req: Request) {
         if(user) {
             return Response.json({error: "User already exists", status: 400});
         }
-        const username = email.substring(0, email.indexOf("@"))
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const data: Prisma.UserCreateInput = {
             email: email,
-            username: username,
-            first_name: username,
             password: hashedPassword,
             public_key: publicKey
         }

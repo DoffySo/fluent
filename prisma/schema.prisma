@@ -3,184 +3,193 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("PRISMA_URL")
   directUrl = env("PRISMA_DIRECT_URL")
 }
 
-// Models
-// --- Server Model
-model Server_Data {
-  id Int @id @default(autoincrement())
+model ServerData {
+  id            Int       @id @default(autoincrement())
   settings_name String?
-  public_key String?
-  created_at DateTime?
-  edited_at DateTime?
+  public_key    String?
+  created_at    DateTime?
+  edited_at     DateTime?
 }
-//
 
-// --- User Model
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String?
-  public_key String @unique       // RSA generated key for encryption/decryption
-  created_at DateTime?
-  last_seen DateTime?
-  first_name String?
-  last_name String?
-  username String @unique         // Username what will display with @ (e.g. @johndoe)
-  bio String?
-  birthday DateTime?
-  phone_number String? @unique
-  is_premium Boolean?
-  is_support Boolean?
-  is_admin Boolean?
-  settings User_Settings?
-  privacy User_Privacy?
-
-  //
-  exceptions_targeted_at_me User_Privacy_Exception[] @relation("privacy_exception_target")
-  messages Message[] @relation("message_sender")
-  chat_member Chat_Member[] @relation("chat_member")
-  created_chats Chats[] @relation("chat_owner")
+  id                        Int                    @id @default(autoincrement())
+  email                     String                 @unique
+  password                  String?
+  public_key                String                 @unique
+  created_at                DateTime?              @default(now())
+  last_seen                 DateTime?
+  first_name                String?
+  last_name                 String?
+  username                  String?                @unique
+  bio                       String?
+  birthday                  DateTime?
+  phone_number              String?                @unique
+  is_premium                Boolean?
+  is_support                Boolean?
+  is_admin                  Boolean?
+  chat_member               ChatMember[]           @relation("chat_member")
+  created_chats             Chats[]                @relation("chat_owner")
+  messages                  Message[]              @relation("message_sender")
+  privacy                   UserPrivacy?
+  exceptions_targeted_at_me UserPrivacyException[] @relation("privacy_exception_target")
+  sessions                  UserSessions[]         @relation("user_sessions")
+  settings                  UserSettings?
 }
-model User_Privacy {
-  id Int @id @default(autoincrement())
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int @unique
-  allow_calls Boolean @default(true)
-  allow_chat_invites Boolean @default(true)
-  allow_finding_by_phone_number Boolean @default(true)
-  allow_peer_to_peer_calls Boolean @default(false)
-  allow_voice_and_video_messages Boolean @default(true)
-  autosave_gifts Boolean @default(false)
-  show_bio Boolean @default(true)
-  show_birthday Boolean @default(true)
-  show_link_in_forwarded_messages Boolean @default(true)
-  show_phone_number Boolean @default(true)
-  hide_read_time Boolean @default(false)
 
-  exceptions User_Privacy_Exception[]
+model UserPrivacy {
+  id                              Int                    @id @default(autoincrement())
+  user_id                         Int                    @unique
+  allow_calls                     Boolean                @default(true)
+  allow_chat_invites              Boolean                @default(true)
+  allow_finding_by_phone_number   Boolean                @default(true)
+  allow_peer_to_peer_calls        Boolean                @default(false)
+  allow_voice_and_video_messages  Boolean                @default(true)
+  autosave_gifts                  Boolean                @default(false)
+  show_bio                        Boolean                @default(true)
+  show_birthday                   Boolean                @default(true)
+  show_link_in_forwarded_messages Boolean                @default(true)
+  show_phone_number               Boolean                @default(true)
+  hide_read_time                  Boolean                @default(false)
+  user                            User                   @relation(fields: [user_id], references: [id])
+  exceptions                      UserPrivacyException[]
 }
-model User_Privacy_Exception {
-  id Int @id @default(autoincrement())
-  privacy User_Privacy? @relation(fields: [privacy_id], references: [id])
-  privacy_id Int?
-  target_user User? @relation(fields: [target_user_id], references: [id], name: "privacy_exception_target")
+
+model UserPrivacyException {
+  id             Int          @id @default(autoincrement())
+  privacy_id     Int?
   target_user_id Int?
-  field String?
-  value Boolean?
+  field          String?
+  value          Boolean?
+  privacy        UserPrivacy? @relation(fields: [privacy_id], references: [id])
+  target_user    User?        @relation("privacy_exception_target", fields: [target_user_id], references: [id])
 
   @@unique([privacy_id, target_user_id, field])
 }
-model User_Settings {
-  id Int @id @default(autoincrement())
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int @unique
+
+model UserSettings {
+  id                                Int     @id @default(autoincrement())
+  user_id                           Int     @unique
   private_show_message_notification Boolean @default(true)
-  private_show_message_previews Boolean @default(true)
-  group_show_message_notification Boolean @default(true)
-  group_show_message_previews Boolean @default(true)
+  private_show_message_previews     Boolean @default(true)
+  group_show_message_notification   Boolean @default(true)
+  group_show_message_previews       Boolean @default(true)
   channel_show_message_notification Boolean @default(true)
-  channel_show_message_previews Boolean @default(true)
+  channel_show_message_previews     Boolean @default(true)
+  user                              User    @relation(fields: [user_id], references: [id])
 }
-// ---
+
+model UserSessions {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  token      String   @unique
+  created_at DateTime @default(now())
+  expires_at DateTime
+  user       User     @relation("user_sessions", fields: [user_id], references: [id])
+}
 
 model Message {
-  id Int @id @default(autoincrement())
-  sender_type MessageSenderType
-  sender_user User? @relation(fields: [sender_user_id], references: [id], name: "message_sender")
-  sender_user_id Int?
-  sender_chat Chats? @relation(fields: [sender_chat_id], references: [id])
-  sender_chat_id Int?
-  sending_state MessageState?
+  id              Int                 @id @default(autoincrement())
+  sender_type     MessageSenderType
+  sender_user_id  Int?
+  sender_chat_id  Int?
+  sending_state   MessageState?
   sheduling_state MessageState?
-  is_pinned Boolean?
-  can_be_saved Boolean?
+  is_pinned       Boolean?
+  can_be_saved    Boolean?
   is_channel_post Boolean?
-  date DateTime?
-  edit_date DateTime?
-  content_type MessageContentType?
-  content Json?
+  date            DateTime?
+  edit_date       DateTime?
+  content_type    MessageContentType?
+  content         Json?
+  sender_chat     Chats?              @relation(fields: [sender_chat_id], references: [id])
+  sender_user     User?               @relation("message_sender", fields: [sender_user_id], references: [id])
 }
 
-// --- Chat Model
 model Chats {
-  id Int @id @default(autoincrement())
-  owner User? @relation(fields: [owner_id], references: [id], name: "chat_owner")
-  owner_id Int?
-  chat_type Chat_Type
-  title String?
-  photo String?
-  messages Message[]
-  members Chat_Member[]
-  permissions Chat_Permissions? @relation(fields: [permissions_id], references: [id])
+  id             Int              @id @default(autoincrement())
+  owner_id       Int?
+  title          String?
+  photo          String?
   permissions_id Int?
+  chat_type      ChatType
+  owner          User?            @relation("chat_owner", fields: [owner_id], references: [id])
+  permissions    ChatPermissions? @relation(fields: [permissions_id], references: [id])
+  messages       Message[]
+  members        ChatMember[]     @relation("ChatMemberToChats")
 }
-model Chat_Member {
-  id Int @id @default(autoincrement())
-  user User? @relation(fields: [user_id], references: [id], name: "chat_member")
-  user_id Int?
-  joined_at DateTime?
-  custom_title String?
-  is_admin Boolean @default(false)
-  admin_permissions Chat_Admin_Permissions? @relation(fields: [admin_permissions_id], references: [id])
+
+model ChatMember {
+  id                   Int                   @id @default(autoincrement())
+  user_id              Int?
+  joined_at            DateTime?
+  custom_title         String?
+  is_admin             Boolean               @default(false)
   admin_permissions_id Int?
-  chat Chats[]
+  admin_permissions    ChatAdminPermissions? @relation(fields: [admin_permissions_id], references: [id])
+  user                 User?                 @relation("chat_member", fields: [user_id], references: [id])
+  chat                 Chats[]               @relation("ChatMemberToChats")
 }
-model Chat_Permissions {
-  id Int @id @default(autoincrement())
-  can_send_basic_messages Boolean @default(true) // text messages, contacts, giveaways, giveaway winners, invoices, locations, and venues
-  can_send_other_messages Boolean @default(true) // animations, games, stickers, and dice and inlne bots (in the future)
-  can_send_audio_files Boolean @default(true)
-  can_send_documents Boolean @default(true)
-  can_send_photos Boolean @default(true)
-  can_send_video_notes Boolean @default(true)
-  can_send_audio_notes Boolean @default(true)
-  can_send_polls Boolean @default(true)
-  can_change_info Boolean @default(true)
-  can_invite_users Boolean @default(true)
-  can_pin_messages Boolean @default(true)
 
-  chat Chats[]
+model ChatPermissions {
+  id                      Int     @id @default(autoincrement())
+  can_send_basic_messages Boolean @default(true)
+  can_send_other_messages Boolean @default(true)
+  can_send_audio_files    Boolean @default(true)
+  can_send_documents      Boolean @default(true)
+  can_send_photos         Boolean @default(true)
+  can_send_video_notes    Boolean @default(true)
+  can_send_audio_notes    Boolean @default(true)
+  can_send_polls          Boolean @default(true)
+  can_change_info         Boolean @default(true)
+  can_invite_users        Boolean @default(true)
+  can_pin_messages        Boolean @default(true)
+  chat                    Chats[]
 }
-model Chat_Admin_Permissions {
-  id Int @id @default(autoincrement())
-  can_manage_chat Boolean @default(false)
-  can_change_info Boolean @default(false)
-  can_post_message Boolean @default(false)
-  can_delete_message Boolean @default(false)
-  can_invite_users Boolean @default(false)
-  can_restrict_users Boolean @default(false)
-  can_promote_users Boolean @default(false)
-  can_manage_video_chats Boolean @default(false)
-  is_anonymous Boolean @default(false)
 
-  member Chat_Member[]
+model ChatAdminPermissions {
+  id                     Int          @id @default(autoincrement())
+  can_manage_chat        Boolean      @default(false)
+  can_change_info        Boolean      @default(false)
+  can_post_message       Boolean      @default(false)
+  can_delete_message     Boolean      @default(false)
+  can_invite_users       Boolean      @default(false)
+  can_restrict_users     Boolean      @default(false)
+  can_promote_users      Boolean      @default(false)
+  can_manage_video_chats Boolean      @default(false)
+  is_anonymous           Boolean      @default(false)
+  member                 ChatMember[]
 }
-// Enums
-enum Chat_Type {
+
+enum ChatType {
   PRIVATE
   GROUP
   CHANNEL
 }
+
 enum MessageState {
   NULL
   SENDING
   SENDED
   FAILED
 }
+
 enum ScheduledMessageState {
   NULL
   WAITING
   SENDED
   FAILED
 }
+
 enum MessageSenderType {
   USER
   CHAT
 }
+
 enum MessageContentType {
   TEXT
   PHOTO

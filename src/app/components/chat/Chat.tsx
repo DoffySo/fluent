@@ -49,15 +49,15 @@ export default function Chat({chatid}: {chatid?: number}) {
     return (
         <>
 
-            <div className="chat w-full sm:border-l h-full border-gray-200">
+            <div className="chat w-full sm:border-l h-full border-accent">
                 { chatid &&
                     <div className="chat-container flex flex-col w-full h-full relative hover:cursor-default">
 
-                        <div className="chat-header w-full border-b border-gray-200 h-16 absolute z-[5000] top-0 bg-white/30 backdrop-blur-[3px] text-neutral-900">
+                        <div className="chat-header w-full border-b border-accent h-16 absolute z-[5000] top-0 bg-background/20 backdrop-blur-[3px] text-foreground">
                             <div className="chat-header__container w-full h-full flex px-1 gap-2">
                                 <div className="back my-auto p-1 h-fit w-fit items-center flex hover:cursor-pointer hover:bg-neutral-400/30 rounded-full" onClick={() => setCurrentChatId(null)}>
                                     <Icon icon="fluent:chevron-left-48-filled" width="28" height="28" />
-                                    <div className="badge -ml-1 bg-gray-400 px-1.5 text-xs font-medium text-white rounded-full flex md:hidden">
+                                    <div className="badge -ml-1 bg-secondary px-1.5 text-xs font-medium text-muted-foreground rounded-full flex md:hidden">
                                         10
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@ export default function Chat({chatid}: {chatid?: number}) {
                             </div>
                         </div>
 
-                        <div className="chat-footer w-full border-t border-gray-200 min-h-16 h-auto bg-white/30 absolute z-[5000] bottom-0 backdrop-blur-[3px] items-center flex">
+                        <div className="chat-footer w-full border-t border-accent min-h-16 h-auto bg-background/20 absolute z-[5000] bottom-0 backdrop-blur-[3px] items-center flex">
                             <div className="chat-footer__container px-1 flex gap-2 items-center h-full w-full">
                                 <div className="btn attach flex hover:cursor-pointer hover:bg-neutral-400/30 p-1 rounded-full">
                                     <Icon icon="fluent:attach-48-filled" width="24" height="24" />

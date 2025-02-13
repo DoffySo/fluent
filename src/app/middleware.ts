@@ -1,13 +1,21 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+import { getSession } from "@/app/lib/session";
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-    document.documentElement.classList.toggle(
-        'dark',
-        localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    )
-    if(!localStorage.getItem("theme")) {
-        localStorage.setItem("theme", "dark");
+export async function middleware(req: Request) {
+    const url = new URL(req.url);
+    const session = await getSession();
+
+    if (session && ["/signin", "/signup"].includes(url.pathname)) {
+        return NextResponse.redirect(new URL("/chat", req.url));
     }
+
+    if (!session && url.pathname.startsWith("/chat")) {
+        return NextResponse.redirect(new URL("/signin", req.url));
+    }
+
+    return NextResponse.next();
 }
+
+export const config = {
+    matcher: ["/signin", "/signup", "/chat/:path*"],
+};

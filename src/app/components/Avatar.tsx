@@ -26,7 +26,7 @@ export default function Avatar({src, alt, width, height, fallbackLetters}: Avata
                 />
                 }
                 {!src &&
-                    <div className="avatar w-full h-full rounded-full bg-neutral-200 flex justify-center items-center">
+                    <div className="avatar w-full h-full rounded-full bg-foreground text-accent flex justify-center items-center">
                         <span className={"font-extrabold text-sm"}>
                             {fallbackLetters}
                         </span>

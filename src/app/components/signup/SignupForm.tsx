@@ -3,6 +3,10 @@ import {useRef, useState} from "react";
 import Link from "next/link";
 import {generateRSAKeys} from "@/app/lib/crypto";
 import {Icon} from "@iconify/react";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Label} from "@/components/ui/label";
+import {Button} from "@/components/ui/button";
+import {redirect} from "next/navigation";
 
 function FormItem({children}) {
     return (
@@ -27,7 +31,7 @@ function FormError({text} : FormErrorType) {
 }
 
 export function SignupForm() {
-    const [emailValue, setemailValue] = useState<string>("");
+    const [emailValue, setEmailValue] = useState<string>("");
     const [passwordValue, setPasswordValue] = useState<string>("");
     const [repeatpasswordValue, setRepeatPasswordValue] = useState<string>("");
     const [checkedValue, setCheckedValue] = useState<boolean>(false);
@@ -38,6 +42,8 @@ export function SignupForm() {
     const [emailEmpty, setEmailEmpty] = useState<boolean>(false);
     const [emailTaken, setEmailTaken] = useState<boolean>(false);
     const [errorChecked, setErrorChecked] = useState<boolean>(false);
+    const [registering, setRegistering] = useState<boolean>(false);
+    const [showSuccessful, setShowSuccessful] = useState<boolean>(false);
 
     const validateEmail = (email: string) => {
         return email.match(
@@ -47,20 +53,26 @@ export function SignupForm() {
 
 
     async function handleRegister() {
-        setPasswordEmpty(false)
-        setPasswordMismatch(false)
-        setErrorChecked(false)
-        setEmailEmpty(false)
+        setRegistering(true)
         setEmailTaken(false)
-        setEmailValid(true)
 
         if(passwordValue.trim() === "") setPasswordEmpty(true)
-        if(emailValue.trim() === "") setEmailEmpty(true)
-        if (passwordValue !== repeatpasswordValue) setPasswordMismatch(true)
-        if(!checkedValue) setErrorChecked(true)
-        if(!validateEmail(emailValue)) setEmailValid(true)
+        else setPasswordEmpty(false)
 
-        if(passwordMismatch || errorChecked || passwordEmpty || emailEmpty || !emailValid) {
+        if(emailValue.trim() === "") setEmailEmpty(true)
+        else setEmailEmpty(false)
+
+        if (passwordValue !== repeatpasswordValue) setPasswordMismatch(true)
+        else setPasswordMismatch(false)
+
+        if(!checkedValue) setErrorChecked(true)
+        else setErrorChecked(false)
+
+        if(!validateEmail(emailValue)) setEmailValid(false)
+        else setEmailValid(true)
+
+        if(passwordMismatch || errorChecked || passwordEmpty || emailEmpty || !emailValid || emailTaken) {
+            setRegistering(false)
             return;
         } else {
                 const {publicKey, privateKey} = await generateRSAKeys();
@@ -82,6 +94,15 @@ export function SignupForm() {
                     console.log(data.error == "User already exists");
                     setEmailTaken(true)
                 }
+                if(data.status === 201) {
+                    setShowSuccessful(true)
+
+                    setTimeout (() => {
+                        redirect('/chat')
+                        setShowSuccessful(false)
+                    }, 5000)
+                }
+                setRegistering(false)
         }
 
 
@@ -102,10 +123,11 @@ export function SignupForm() {
                         </div>
                     </FormItem>
                     <FormItem>
-                        <label htmlFor="email" className={"font-medium text-sm"}>Email</label>
+                        {/*<label htmlFor="email" className={"font-medium text-sm"}>Email</label>*/}
+                        <Label htmlFor={"email"} className={`${emailEmpty || !emailValid || emailTaken ? "text-destructive" : "text-foreground"}e my-1`}>Email</Label>
                         <input
                             className={`border border-gray-300 h-8 rounded-md w-full outline-none px-2 transition-all duration-100 ${emailEmpty || emailTaken ? 'border-red-400' : ''}`}
-                            onChange={(e) => setemailValue(e.target.value)}
+                            onChange={(e) => setEmailValue(e.target.value)}
                             type="email" id={"email"} name={"email"} placeholder={"john.doe@email.com"}/>
                         {emailEmpty &&
                             <FormError text={"Email is required"} />
@@ -118,19 +140,21 @@ export function SignupForm() {
                         }
                     </FormItem>
                     <FormItem>
-                    <label htmlFor="password" className={"font-medium text-sm"}>Password</label>
+                        {/*<label htmlFor="password" className={"font-medium text-sm"}>Password</label>*/}
+                        <Label htmlFor={"password"} className={`${passwordMismatch || passwordEmpty ? "text-destructive" : "text-foreground"} my-1`}>Password</Label>
                         <input
                             className={`border border-gray-300 h-8 rounded-md w-full outline-none px-2 transition-all duration-100 ${passwordMismatch || passwordEmpty ? 'border-red-400' : ''}`}
                             type="password" id={"password"} name={"password"}
                             onChange={(e) => setPasswordValue(e.target.value)}
                             placeholder={"ExtraStrongPassword1234567890"}/>
                         {passwordEmpty &&
-                            <FormError text={"Password is required"} />
+                            <FormError text={"Password is required"}/>
                         }
                     </FormItem>
                     <FormItem>
-                    <label htmlFor="password_repeat" className={"font-medium text-sm"}>Repeat
-                            Password</label>
+                        {/*<label htmlFor="password_repeat" className={"font-medium text-sm"}>Repeat*/}
+                        {/*    Password</label>*/}
+                        <Label htmlFor={"password_repeat"} className={`${passwordMismatch ? "text-destructive" : "text-foreground"} my-1 font-normal`}>Repeat Password</Label>
                         <input
                             className={`border border-gray-300 h-8 rounded-md w-full outline-none px-2 transition-all duration-100 ${passwordMismatch ? 'border-red-400' : ''}`}
                             type="password" id={"password_repeat"} name={"password_repeat"}
@@ -144,8 +168,9 @@ export function SignupForm() {
                     <FormItem>
                     <div className={`items-start gap-1 w-full flex flex-col`}>
                             <div className="flex items-start gap-1">
-                                <input name="terms" id={"terms"} type="checkbox"
-                                       onChange={(e) => setCheckedValue(e.target.checked)}/>
+                                {/*<input name="terms" id={"terms"} type="checkbox"*/}
+                                {/*       onChange={(e) => setCheckedValue(e.target.checked)}/>*/}
+                                <Checkbox onCheckedChange={(e) => setCheckedValue(e)} id="terms" />
                                 <label htmlFor="terms" className={"font-medium text-xs w-full max-w-96"}>I have
                                     read,
                                     understood, and agree to the <Link
@@ -162,11 +187,19 @@ export function SignupForm() {
                     </FormItem>
                     <hr className={"bg-neutral-200 text-neutral-200"}/>
                     <FormItem>
-                        <button
-                            onClick={() => handleRegister()}
-                            className="btn text-xl font-bold bg-neutral-950 text-white px-8 py-1 rounded-md mx-auto flex hover:cursor-pointer hover:bg-neutral-800 active:bg-neutral-800">
-                            Sign Up
-                        </button>
+                        <Button disabled={registering} onClick={() => handleRegister()} size={"lg"} className={"font-bold text-lg px-6 py-2 hover:cursor-pointer mx-auto"}>
+                            {registering && "Please wait..."}
+                            {!registering && "Sign Up"}
+                        </Button>
+                        {showSuccessful &&
+                            <Label className={"text-green-600 text-md font-normal my-2 mx-auto flex gap-1 items-center"}>
+                                <Icon icon="fluent:checkmark-circle-48-regular" width="16" height="16" />
+                                Successful signed up. Redirecting in a few seconds...
+                            </Label>
+                        }
+                    </FormItem>
+                    <FormItem>
+                        <Link className={"text-muted-foreground group flex text-sm gap-1 mx-auto"} href={"/signin"}>Already have an account? <span className={"text-blue-500 group-hover:underline"}>Sign in</span></Link>
                     </FormItem>
                 </div>
             </div>
