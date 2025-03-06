@@ -1,4 +1,4 @@
-import Header from "@/app/components/Header";
+import Header from "@/app/components/header/Header";
 import Link from "next/link";
 import {SignupForm} from "@/app/components/signup/SignupForm";
 

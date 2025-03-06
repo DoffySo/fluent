@@ -16,24 +16,7 @@ export default function App() {
     const chatId = useChatStore(state => state.id)
     const { isMobile, isTablet, isDesktop } = useViewport();
     // const [session, setSession] = useState<unknown | null>(null)
-    const updateUser = useUserStore(state => state.updateUser);
-    const setUser = useUserStore(state => state.setUser);
     const currentUser = useUserStore(state => state.user);
-
-    const fetchUserData = async () => {
-        const session = await getSession();
-        if (session?.user_id) {
-            const token = session.token; // Assuming you have a token in the session
-            setUser(token); // Optionally, set user data if required
-        }
-    };
-
-
-    useEffect(() => {
-        fetchUserData();
-
-        console.log(currentUser, "current user");
-    }, [])
 
 
     return (

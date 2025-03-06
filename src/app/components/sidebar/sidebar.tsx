@@ -31,7 +31,7 @@ export default function Sidebar({collapsed}: {collapsed?: boolean}) {
 
     return (
         <>
-            <div className="sidebar w-full md:w-1/3 h-full ">
+            <div className="sidebar w-full md:w-1/3 h-full z-1">
                 <div className="sidebar-container w-full h-full flex flex-col gap-1">
                     <div className="sidebar-header w-full">
                         <div className="sidebar-header__container w-full flex flex-col px-px">

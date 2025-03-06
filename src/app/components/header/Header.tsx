@@ -1,6 +1,5 @@
 'use client'
 import Link from "next/link";
-import gsap from "gsap";
 import {Icon} from "@iconify/react";
 import {Button} from "@/components/ui/button";
 // import {useGSAP} from "@gsap/react";
@@ -9,19 +8,27 @@ import { useTheme } from 'next-themes'
 import {useEffect, useState} from "react";
 import {getSession} from "@/app/lib/session";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useUserStore} from "@/app/stores/user";
+import Image from 'next/image'
+import FeedbackDialog from "@/app/components/dialogs/feedback";
+import HeaderBurger from "@/app/components/dropdowns/headerburger";
+import HeaderConstructionBanner from "@/app/components/header/HeaderConstructionBanner";
+import AuthDialog from "@/app/components/dialogs/auth";
 
 export default function Header() {
     const { theme, setTheme } = useTheme()
-    const [authorized, setAuthorized] = useState<boolean | null>(null);
+    const user = useUserStore((state) => state.user);
 
-    async function checkSession() {
-        const session = await getSession();
-        if(session.user) {
-            setAuthorized(true);
-        }
-    }
+    // const [authorized, setAuthorized] = useState<boolean | null>(null);
+    //
+    // async function checkSession() {
+    //     const session = await getSession();
+    //     if(session.user) {
+    //         setAuthorized(true);
+    //     }
+    // }
 
-    checkSession()
+    // checkSession()
 
     const links = [
         {
@@ -38,6 +45,11 @@ export default function Header() {
             id: 3,
             text: "API",
             href: "/docs",
+        },
+        {
+            id: 4,
+            text: "Feedbacks",
+            href: "/feedbacks",
         }
     ]
 
@@ -51,11 +63,13 @@ export default function Header() {
 
 
     return (
-        <header className={"header w-full flex justify-center"}>
-            <div className="header-container w-full max-w-[1200px] mx-auto h-20 flex items-center justify-between">
+        <header className={"header w-full flex flex-col justify-center border-b"}>
+            <div className="header-container w-full mx-auto h-18 flex items-center justify-between px-2">
                 <div className="left links flex gap-4 h-16">
                     <div className="logo flex items-center w-24">
-                        <Link className="link text-foreground flex items-center my-auto font-extrabold text-2xl" href={"/"}>Fluent</Link>
+                        <Link className="link text-foreground flex items-center my-auto font-extrabold text-2xl" href={"/public"}>
+                            <Image className={"dark:invert"} src="/FluentLogo.svg" alt="logo" width={128} height={42} />
+                        </Link>
                     </div>
                     <ul className="links hidden md:flex items-center gap-3 text-sm text-gray-500">
                         {
@@ -80,32 +94,11 @@ export default function Header() {
 
 
                     </Button>
-                    <Button size={"sm"} className={"hover:cursor-pointer flex md:hidden"}>
-                        <Icon icon="fluent:line-horizontal-3-48-filled" width="21" height="21"/>
-                    </Button>
-                    {authorized == null && (
-                        <>
-                            <Skeleton className="w-16 h-8 rounded-sm"></Skeleton>
-                            <Skeleton className="w-16 h-8 rounded-sm"></Skeleton>
-                        </>
+                    <HeaderBurger links={links} />
+                    {!user.token && (
+                        <AuthDialog isMobile={false} signIn={true} />
                     )}
-                    {!authorized && authorized != null && (
-                        <>
-                            <Button className={"hover:cursor-pointer hidden md:flex"} size={"sm"} variant={"outline"}>
-                                <Link href={"signin"}
-                                      className="btn flex">
-                                    Sign In
-                                </Link>
-                            </Button>
-                            <Button className={"hover:cursor-pointer hidden md:flex"} size={"sm"}>
-                                <Link href={"signup"}
-                                      className="btn flex w-full">
-                                    Sign Up
-                                </Link>
-                            </Button>
-                        </>
-                    )}
-                    {authorized && (
+                    {user.token && (
                         <>
                             <Button className={"hover:cursor-pointer hidden md:flex"} size={"sm"} variant={"outline"}>
                                 <Link href={"logout"}
@@ -114,7 +107,7 @@ export default function Header() {
                                 </Link>
                             </Button>
                             <Button className={"hover:cursor-pointer hidden md:flex"} size={"sm"}>
-                                <Link href={"chat"}
+                                <Link href={"../chat"}
                                       className="btn flex w-full">
                                     To chats
                                 </Link>
@@ -124,6 +117,7 @@ export default function Header() {
                     }
                 </div>
             </div>
+            <HeaderConstructionBanner />
         </header>
     );
 }

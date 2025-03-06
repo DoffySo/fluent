@@ -5,8 +5,9 @@ import {useChatStore} from "@/app/stores/chat";
 import Image from 'next/image'
 import TextareaAutosize from 'react-textarea-autosize';
 import {ChatContext} from "@/app/components/chat/ChatContext";
-import Avatar from "@/app/components/Avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {decryptMessage, encryptMessage, generateRSAKeys} from "@/app/lib/crypto";
+import ChatHeader from "@/app/components/chat/ChatHeader";
 
 const initialContextMenu = {
     show: false,
@@ -49,33 +50,11 @@ export default function Chat({chatid}: {chatid?: number}) {
     return (
         <>
 
-            <div className="chat w-full sm:border-l h-full border-accent">
+            <div className="chat w-full sm:border-l h-full border-accent z-1">
                 { chatid &&
                     <div className="chat-container flex flex-col w-full h-full relative hover:cursor-default">
 
-                        <div className="chat-header w-full border-b border-accent h-16 absolute z-[5000] top-0 bg-background/20 backdrop-blur-[3px] text-foreground">
-                            <div className="chat-header__container w-full h-full flex px-1 gap-2">
-                                <div className="back my-auto p-1 h-fit w-fit items-center flex hover:cursor-pointer hover:bg-neutral-400/30 rounded-full" onClick={() => setCurrentChatId(null)}>
-                                    <Icon icon="fluent:chevron-left-48-filled" width="28" height="28" />
-                                    <div className="badge -ml-1 bg-secondary px-1.5 text-xs font-medium text-muted-foreground rounded-full flex md:hidden">
-                                        10
-                                    </div>
-                                </div>
-                                <div className="user h-full w-full flex items-center gap-2">
-                                    <div className="user-avatar h-10 w-10 flex">
-                                        <Avatar fallbackLetters={"U"} src={"https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png"} width={40} height={40} />
-                                    </div>
-                                    <div className="user-info flex flex-col h-12 w-fit font-medium">
-                                        <span className="username">
-                                            Username
-                                        </span>
-                                        <span className="status text-sm text-gray-500">
-                                            status
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ChatHeader />
 
                         <div className="chat-content w-full h-full">
                             <div

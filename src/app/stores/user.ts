@@ -1,85 +1,69 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { getSession } from "@/app/lib/session";
 
 type User = {
-    id: number | null;
-    token: string | null;
-    username: string | null;
-    email: string | null;
-    first_name: string | null;
-    last_name: string | null;
-    public_key: string | null;
-    phone_number: string | null;
+    id: number              | null;
+    token: string           | null;
+    email: string           | null;
+    public_key: string      | null;
+    created_at: string      | null;
+    last_seen: string       | null;
+    first_name: string      | null;
+    last_name: string       | null;
+    username: string        | null;
+    bio: string             | null;
+    birthday: string        | null;
+    phone_number: string    | null;
+    is_premium: boolean     | null;
+    is_support: boolean     | null;
+    is_admin: boolean       | null;
 };
 
-type storeType = {
+type StoreType = {
     user: User;
-    updateUser: (token: string) => void;
-    setUser: (token: string) => void;
+    setUser: (user: User) => void;
+    fetchUser: () => Promise<void>;
 };
 
-export const useUserStore = create<storeType>((set) => ({
-    user: {
-        id: null,
-        token: null,
-        username: null,
-        email: null,
-        first_name: null,
-        last_name: null,
-        public_key: null,
-        phone_number: null,
-    },
+export const useUserStore = create<StoreType>()(
+    persist(
+        (set) => ({
+            user: {
+                id: null,
+                token: null,
+                email: null,
+                public_key: null,
+                created_at: null,
+                last_seen: null,
+                first_name: null,
+                last_name: null,
+                username: null,
+                bio: null,
+                birthday: null,
+                phone_number: null,
+                is_premium: null,
+                is_support: null,
+                is_admin: null,
+            },
+            setUser: (user) => set({ user }),
+            fetchUser: async () => {
+                const session = await getSession();
+                if (session?.user_id) {
+                    const res = await fetch(`/api/user/${session.user_id.toString()}`);
+                    if (res.ok) {
+                        const {user} = await res.json();
 
-    // Update user data by fetching it from the API using the user_id from the session
-    updateUser: async (token) => {
-        const session = await getSession();
-        if (session?.user_id) {
-            // Fetch user data from the API using the user_id from the session
-            const res = await fetch(`/api/user/${session.user_id.toString()}`);
-            const userData = await res.json();
-
-            if (userData) {
-                // Update the state with the fetched user data
-                set(() => ({
-                    user: {
-                        token: token,
-                        id: userData.user.id,
-                        username: userData.user.username,
-                        email: userData.user.email,
-                        first_name: userData.user.first_name,
-                        last_name: userData.user.last_name,
-                        public_key: userData.user.public_key,
-                        phone_number: userData.user.phone_number,
-                    },
-                }));
-            }
+                        set({ user });
+                    } else {
+                        console.error("Failed to fetch user data:", res.statusText);
+                    }
+                }
+            },
+        }),
+        {
+            name: "user-storage",
+            storage: createJSONStorage(() => sessionStorage),
         }
-    },
-
-    // Set user data by fetching it from the API using the user_id from the session
-    setUser: async (token) => {
-        const session = await getSession();
-        if (session?.user_id) {
-            // Fetch user data from the API using the user_id from the session
-            const res = await fetch(`/api/user/${session.user_id.toString()}`);
-            const userData = await res.json();
-
-            if (userData) {
-
-                // Set the state with the fetched user data
-                set(() => ({
-                    user: {
-                        token: token,
-                        id: userData.user.id,
-                        username: userData.user.username,
-                        email: userData.user.email,
-                        first_name: userData.user.first_name,
-                        last_name: userData.user.last_name,
-                        public_key: userData.user.public_key,
-                        phone_number: userData.user.phone_number,
-                    },
-                }));
-            }
-        }
-    },
-}));
+    )
+);

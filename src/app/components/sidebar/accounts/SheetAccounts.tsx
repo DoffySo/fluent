@@ -17,6 +17,7 @@ export default function SheetAccounts() {
     return(
         <>
             <div className="accounts">
+                {/*{JSON.stringify(currentUser)}*/}
                 <Accordion type="single" collapsible>
                     <AccordionItem value="item-1" className={"px-2"}>
                         <AccordionTrigger className={"cursor-pointer flex"}>

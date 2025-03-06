@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
@@ -20,7 +19,16 @@ export default function SheetAccount({ current, user_id }: AccountTypes) {
 
         async function getUser() {
             try {
-                const res = await fetch(`/api/user/${user_id}`);
+                const baseUrl =
+                    process.env.NODE_ENV === "development"
+                        ? process.env.NEXT_DEV_BASE_URL
+                        : process.env.NEXT_BASE_URL
+                const res = await fetch(`/api/user/${user_id}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
                 const data = await res.json();
 
                 if (data.user) {

@@ -7,9 +7,10 @@ import {useTheme} from "next-themes";
 import {DialogTitle} from "@radix-ui/react-dialog";
 import {useEffect, useState} from "react";
 import {getSession} from "@/app/lib/session";
+import {useUserStore} from "@/app/stores/user";
 
 export default function SidebarSheet() {
-    const [user, setUser] = useState<any>(null);
+    const user = useUserStore((state) => state.user);
     const [username, setUsername] = useState<string | null>(null);
     const [phone, setPhone] = useState<string | null>(null);
     const { theme, setTheme } = useTheme()
@@ -22,32 +23,12 @@ export default function SidebarSheet() {
     }
 
     async function getUser() {
-        try {
-            const res = await fetch(`/api/user/${1}`);
-            const data = await res.json();
-
-            if (data.user) {
-                setUser(data.user);
-
-                const { first_name, last_name, username, email, phone_number } = data.user;
-                setUsername(first_name ? `${first_name} ${last_name || ""}`.trim() : username || email);
-                if (phone_number) setPhone(phone_number);
-            }
-        } catch (error) {
-            console.error("Error fetching user:", error);
-        }
+            const { first_name, last_name, username, email, phone_number } = user;
+            setUsername(first_name ? `${first_name} ${last_name || ""}`.trim() : username || email);
+            if (phone_number) setPhone(phone_number);
     }
-
-    async function getCurrentSession() {
-        const session = await getSession()
-        console.log(JSON.stringify(session))
-    }
-
 
     useEffect(() => {
-        getCurrentSession()
-        // if (!user_id) return;
-
         getUser();
     }, []);
 
@@ -68,8 +49,8 @@ export default function SidebarSheet() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side={"left"}>
-                    <DialogTitle className={"hidden"}>Аккаунты</DialogTitle> {/* Скрытый заголовок для доступности */}
-                    <div className="relative w-full h-full">
+                    <DialogTitle className={"hidden"}>Аккаунты</DialogTitle>
+                    <div className="z-[9999] relative w-full h-full">
                         <div className="theme flex w-full h-10 items-center justify-end">
                             <Button onClick={() => handleTheme()} className={"hover:cursor-pointer w-fit outline-none"} size={"sm"} variant={"link"}>
                                 {theme == "dark" &&
