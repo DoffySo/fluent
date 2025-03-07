@@ -1,3 +1,4 @@
+"use client"
 import {
     Dialog,
     DialogContent,
@@ -12,14 +13,22 @@ import Image from "next/image";
 import {useState} from "react";
 import {Checkbox} from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator"
+import {Icon} from "@iconify/react";
 
 
 interface IProps {
-    isMobile: boolean
-    signIn: boolean | true
+    isMobile: boolean | undefined;
+    signIn: boolean | true;
+    forceShow: boolean | true;
+    isSmall: boolean | false;
+    text: string | undefined;
+    textWeight: string | undefined;
+    icon: string | undefined;
+    iconWidth: number | 21;
+    iconHeight: number | 21;
 }
 
-export default function AuthDialog({isMobile, signIn} : IProps) {
+export default function AuthDialog({isMobile, signIn, forceShow, text, textWeight, icon, iconWidth, iconHeight} : IProps) {
     const [isSignin, setIsSignin] = useState(signIn);
 
     async function toggleSign() {
@@ -31,14 +40,26 @@ export default function AuthDialog({isMobile, signIn} : IProps) {
         <Dialog>
             <DialogTrigger asChild>
                 {
-                    !isMobile ? (
-                        <Button className={"hover:cursor-pointer hidden md:flex"} size={"sm"}>
-                            Sign In
-                        </Button>
+                    !isMobile || forceShow ? (
+                            <Button className={`boston hover:cursor-pointer ${textWeight ? textWeight : 'font-normal'} ${!forceShow ? "hidden md:flex" : "flex"}`} size={'sm'}>
+                                {
+                                    icon &&
+                                    <Icon icon={icon} width={`${iconWidth}`} height={`${iconHeight}`} />
+                                }
+                                {text || "Sign In"}
+                            </Button>
+
+
                     ) : (
                         <Button
-                            className={`text-muted-foreground flex items-center hover:text-accent-foreground duration-100 p-0 h-4 hover:no-underline hover:cursor-pointer`}
-                            variant={"link"}>Sign In</Button>
+                            className={`boston text-muted-foreground flex items-center hover:text-accent-foreground duration-100 p-0 h-4 hover:no-underline hover:cursor-pointer ${textWeight ? textWeight : 'font-normal'}`}
+                            variant={"link"}>
+                            {
+                                icon &&
+                                <Icon icon={icon} width={`${iconWidth}`} height={`${iconHeight}`} />
+                            }
+                            {text || "Sign In"}
+                        </Button>
                     )
                 }
             </DialogTrigger>

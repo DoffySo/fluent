@@ -14,6 +14,12 @@ import FeedbackDialog from "@/app/components/dialogs/feedback";
 import HeaderBurger from "@/app/components/dropdowns/headerburger";
 import HeaderConstructionBanner from "@/app/components/header/HeaderConstructionBanner";
 import AuthDialog from "@/app/components/dialogs/auth";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function Header() {
     const { theme, setTheme } = useTheme()
@@ -63,11 +69,11 @@ export default function Header() {
 
 
     return (
-        <header className={"header w-full flex flex-col justify-center border-b"}>
+        <header className={"header w-full flex flex-col justify-center border-b fixed bg-background/60 backdrop-blur-sm md:bg-background md:backdrop-blur-none z-50"}>
             <div className="header-container w-full mx-auto h-18 flex items-center justify-between px-2">
                 <div className="left links flex gap-4 h-16">
                     <div className="logo flex items-center w-24">
-                        <Link className="link text-foreground flex items-center my-auto font-extrabold text-2xl" href={"/public"}>
+                        <Link className="link text-foreground flex items-center my-auto font-extrabold text-2xl" href={"/"}>
                             <Image className={"dark:invert"} src="/FluentLogo.svg" alt="logo" width={128} height={42} />
                         </Link>
                     </div>
