@@ -1,2 +1,2 @@
-# 🗝️🌐 Encrypted Web-Messenger 
+# 🗝️🌐 Encrypted Web-Messenger
 ### Created with Nuxt3
