@@ -1,17 +1,6 @@
 <script setup lang="ts">
 const open = ref(false)
 
-function isAppleDevice() {
-  const userAgent = navigator.userAgent;
-
-  // Checking if it's an Apple device
-  const isIOS = /iPhone|iPad|iPod/.test(userAgent);
-  const isMacOS = /Macintosh/.test(userAgent);
-
-  // Returns true if the Apple device
-  return isIOS || isMacOS;
-}
-
 </script>
 
 <template>

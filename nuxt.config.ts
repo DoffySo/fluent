@@ -2,7 +2,16 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ['@nuxt/ui', '@nuxt/eslint', 'nuxt-viewport'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/eslint',
+    'nuxt-viewport',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/device',
+    '@pinia/colada-nuxt',
+    '@nuxt/scripts'
+  ],
 
   css: ['~/assets/css/main.css'],
 
