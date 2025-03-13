@@ -4,6 +4,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/ui',
+    '@prisma/nuxt',
     '@nuxt/eslint',
     'nuxt-viewport',
     '@pinia/nuxt',
