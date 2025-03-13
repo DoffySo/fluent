@@ -40,7 +40,7 @@ const links = [
           </LazyNuxtLink>
         </div>
         <div v-if="viewport.isGreaterThan('mobileWide')" class="links items-center gap-1 flex">
-          <LazyNuxtLink v-for="link in links" class="text-sm text-neutral-800 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 duration-100" :href="link.href">
+          <LazyNuxtLink v-for="(link, id) in links" :key="id" class="text-sm text-neutral-800 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 duration-100" :href="link.href">
             {{ link.text }}
           </LazyNuxtLink>
         </div>
@@ -51,6 +51,8 @@ const links = [
       </div>
       <div v-else class="right flex items-center h-full gap-2">
         <MobileBurger />
+        <AuthModal />
+z
       </div>
     </div>
   <UnderConstruction />

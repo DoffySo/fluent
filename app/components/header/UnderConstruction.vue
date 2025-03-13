@@ -7,7 +7,7 @@
           Under construction
         </div>
         <div class="text-xs">
-          Give us feedback on the new website in this <UButton class="p-0 hover:underline hover:cursor-pointer underline-offset-1" size="xs" variant="link">Form</UButton>.
+          Give us feedback on the new website in this <UButton class="p-0 hover:underline hover:cursor-pointer underline-offset-1" size="xs" variant="link">form</UButton>.
         </div>
         <div>
           <UButton class="hover:cursor-pointer" icon="i-lucide-x" variant="ghost" size="sm" color="neutral" />

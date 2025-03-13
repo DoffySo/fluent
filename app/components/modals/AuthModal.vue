@@ -1,5 +1,17 @@
 <script setup lang="ts">
 const open = ref(false)
+
+function isAppleDevice() {
+  const userAgent = navigator.userAgent;
+
+  // Checking if it's an Apple device
+  const isIOS = /iPhone|iPad|iPod/.test(userAgent);
+  const isMacOS = /Macintosh/.test(userAgent);
+
+  // Returns true if the Apple device
+  return isIOS || isMacOS;
+}
+
 </script>
 
 <template>
@@ -14,14 +26,33 @@ const open = ref(false)
     </template>
 
     <template #body>
-      <div class="flex flex-col w-full items-center gap-1">
-          <UButton label="Submit" color="neutral" size="lg" />
+          <div class="flex flex-col justify-center w-full items-center gap-px">
+            <div class="via-email flex flex-col gap-2">
+              <div class="flex flex-col gap-px">
+                <label class="text-sm text-gray-400 dark:text-gray-300" for="email">Email</label>
+                <UInput id="email" color="neutral" variant="subtle" placeholder="" />
+              </div>
+              <div class="flex flex-col gap-px">
+                <label class="text-sm text-gray-400 dark:text-gray-300" for="password">Password</label>
+                <UInput id="password" color="neutral" variant="subtle" placeholder="" type="password" />
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <UButton class="hover:cursor-pointer" disabled icon="mdi:email-outline" label="Continue with email" size="lg" variant="soft" color="neutral" />
+              </div>
+            </div>
+            <USeparator class="my-2" label="OR" />
+            <div class="via-oauth gap-2 flex flex-col">
+                <UButton class="hover:cursor-pointer" color="neutral" label="Continue with GitHub" icon="mdi:github" variant="subtle" size="lg" />
+                <UButton class="hover:cursor-pointer" color="neutral" label="Continue with Google" icon="mdi:google" variant="subtle" size="lg" />
+                <UButton class="hover:cursor-pointer" color="neutral" label="Continue with Apple" icon="mdi:apple" variant="subtle" size="lg" />
+            </div>
       </div>
+
     </template>
 
     <template #footer>
       <p class="text-xs mx-auto text-gray-400 dark:text-gray-300">
-        By signing in, you agree to our <NuxtLink class="text-black dark:text-white hover:underline underline-offset-2" href="#">Terms of Service</NuxtLink> and <NuxtLink class="text-black dark:text-white hover:underline underline-offset-2" href="#">Privacy Policy</NuxtLink>.
+        By signing in, you agree to our <LazyNuxtLink class="text-black dark:text-white hover:underline underline-offset-2" href="/tos">Terms of Service</LazyNuxtLink> and <LazyNuxtLink class="text-black dark:text-white hover:underline underline-offset-2" href="/privacy">Privacy Policy</LazyNuxtLink>.
       </p>
     </template>
   </UModal>
