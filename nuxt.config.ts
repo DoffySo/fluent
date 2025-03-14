@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@pinia/colada-nuxt',
-    '@nuxt/scripts'
+    '@nuxt/scripts',
+    '@nuxt/fonts'
   ],
 
   css: ['~/assets/css/main.css'],

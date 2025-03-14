@@ -29,12 +29,14 @@ const open = ref(false)
                 <UButton class="hover:cursor-pointer" disabled icon="mdi:email-outline" label="Continue with email" size="lg" variant="soft" color="neutral" />
               </div>
             </div>
-            <USeparator class="my-2" label="OR" />
-            <div class="via-oauth gap-2 flex flex-col">
+            <template v-if="false">
+              <USeparator class="my-2" label="OR" />
+              <div class="via-oauth gap-2 flex flex-col">
                 <UButton class="hover:cursor-pointer" color="neutral" label="Continue with GitHub" icon="mdi:github" variant="subtle" size="lg" />
                 <UButton class="hover:cursor-pointer" color="neutral" label="Continue with Google" icon="mdi:google" variant="subtle" size="lg" />
                 <UButton class="hover:cursor-pointer" color="neutral" label="Continue with Apple" icon="mdi:apple" variant="subtle" size="lg" />
-            </div>
+              </div>
+            </template>
       </div>
 
     </template>

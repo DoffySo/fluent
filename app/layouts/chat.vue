@@ -1,8 +1,6 @@
 <template>
-  <div class="bg-white dark:bg-neutral-950">
-    <Header />
+  <div class="bg-white dark:bg-neutral-950 h-screen">
     <slot />
-    <Footer />
   </div>
 </template>
 <script setup lang="ts">

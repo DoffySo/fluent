@@ -31,7 +31,7 @@ const links = [
 </script>
 
 <template>
-  <header class="header flex flex-col fixed w-full">
+  <header class="header flex flex-col w-full fixed">
     <div class="header-container h-12 flex items-center bg-white dark:bg-neutral-950 border-b border-gray-300 dark:border-neutral-700 px-4 justify-between">
       <div class="left flex items-center h-full gap-2">
         <div class="logo">
@@ -52,7 +52,6 @@ const links = [
       <div v-else class="right flex items-center h-full gap-2">
         <MobileBurger />
         <AuthModal />
-z
       </div>
     </div>
   <UnderConstruction />
