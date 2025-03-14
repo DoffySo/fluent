@@ -31,7 +31,7 @@ const links = [
 </script>
 
 <template>
-  <header class="header flex flex-col w-full fixed">
+  <header class="header flex flex-col w-full fixed z-50">
     <div class="header-container h-12 flex items-center bg-white dark:bg-neutral-950 border-b border-gray-300 dark:border-neutral-700 px-4 justify-between">
       <div class="left flex items-center h-full gap-2">
         <div class="logo">
@@ -39,7 +39,7 @@ const links = [
             FLUENT
           </LazyNuxtLink>
         </div>
-        <div v-if="viewport.isGreaterThan('mobileWide')" class="links items-center gap-1 flex">
+        <div v-if="viewport.isGreaterThan('mobileWide')" class="links items-center gap-3 flex">
           <LazyNuxtLink v-for="(link, id) in links" :key="id" class="text-sm text-neutral-800 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 duration-100" :href="link.href">
             {{ link.text }}
           </LazyNuxtLink>
@@ -50,8 +50,7 @@ const links = [
         <AuthModal />
       </div>
       <div v-else class="right flex items-center h-full gap-2">
-        <MobileBurger />
-        <AuthModal />
+        <MobileBurger :header-links="links" />
       </div>
     </div>
   <UnderConstruction />

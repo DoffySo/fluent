@@ -1,11 +1,16 @@
 <script setup lang="ts">
+const props = defineProps({
+  leadingIcon: { type: String },
+  forceDesktop: Boolean,
+})
 const open = ref(false)
-
+const viewport = useViewport()
 </script>
 
 <template>
   <UModal v-model:open="open">
-    <UButton class="hover:cursor-pointer" label="Sign in" color="neutral" variant="solid" size="sm" />
+    <UButton v-if="forceDesktop || viewport.isGreaterThan('mobileWide') " class="hover:cursor-pointer" label="Sign in" color="neutral" variant="solid" size="sm" />
+    <UButton v-else class="hover:cursor-pointer" label="Sign in" color="neutral" variant="link" size="sm" :leading-icon="props.leadingIcon" />
 
     <template #header>
       <div class="flex flex-col mx-auto items-center gap-1 w-full">

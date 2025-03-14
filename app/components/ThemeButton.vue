@@ -1,4 +1,7 @@
 <script setup>
+const props = defineProps({
+  leadingIcon: { type: String },
+})
 const colorMode = useColorMode()
 
 const isDark = computed({
@@ -15,7 +18,8 @@ const isDark = computed({
     <UButton
         color="neutral"
         variant="link"
-        size="xs"
+        size="sm"
+        :leading-icon="props.leadingIcon"
         @click="isDark = !isDark"
     >
       <slot />
