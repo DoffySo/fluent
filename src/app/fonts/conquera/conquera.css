@@ -1,0 +1,72 @@
+@font-face {
+    font-family: 'Conquera';
+    src: url('Conquera-Bold.eot');
+    src: local('Conquera Bold'), local('Conquera-Bold'),
+        url('Conquera-Bold.eot?#iefix') format('embedded-opentype'),
+        url('Conquera-Bold.woff2') format('woff2'),
+        url('Conquera-Bold.woff') format('woff'),
+        url('Conquera-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Conquera';
+    src: url('Conquera-Medium.eot');
+    src: local('Conquera Medium'), local('Conquera-Medium'),
+        url('Conquera-Medium.eot?#iefix') format('embedded-opentype'),
+        url('Conquera-Medium.woff2') format('woff2'),
+        url('Conquera-Medium.woff') format('woff'),
+        url('Conquera-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/*@font-face {*/
+/*    font-family: 'Conquera';*/
+/*    src: url('Conquera-Heavy.eot');*/
+/*    src: local('Conquera Heavy'), local('Conquera-Heavy'),*/
+/*        url('Conquera-Heavy.eot?#iefix') format('embedded-opentype'),*/
+/*        url('Conquera-Heavy.woff2') format('woff2'),*/
+/*        url('Conquera-Heavy.woff') format('woff'),*/
+/*        url('Conquera-Heavy.ttf') format('truetype');*/
+/*    font-weight: 900;*/
+/*    font-style: normal;*/
+/*}*/
+
+@font-face {
+    font-family: 'Conquera Fine';
+    src: url('Conquera-Fine.eot');
+    src: local('Conquera Fine'), local('Conquera-Fine'),
+        url('Conquera-Fine.eot?#iefix') format('embedded-opentype'),
+        url('Conquera-Fine.woff2') format('woff2'),
+        url('Conquera-Fine.woff') format('woff'),
+        url('Conquera-Fine.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Conquera';
+    src: url('Conquera-Light.eot');
+    src: local('Conquera Light'), local('Conquera-Light'),
+        url('Conquera-Light.eot?#iefix') format('embedded-opentype'),
+        url('Conquera-Light.woff2') format('woff2'),
+        url('Conquera-Light.woff') format('woff'),
+        url('Conquera-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Conquera Inline';
+    src: url('Conquera-Inline.eot');
+    src: local('Conquera Inline'), local('Conquera-Inline'),
+        url('Conquera-Inline.eot?#iefix') format('embedded-opentype'),
+        url('Conquera-Inline.woff2') format('woff2'),
+        url('Conquera-Inline.woff') format('woff'),
+        url('Conquera-Inline.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
