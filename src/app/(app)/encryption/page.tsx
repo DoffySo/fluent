@@ -37,13 +37,13 @@ export default function Encryption() {
                 <div className="flex flex-col mt-10 w-125 mx-auto">
                     <h1 className={`text-lg font-bold`}>The full source code can be found in our GitHub repository:</h1>
                     <div className="flex flex-wrap space-y-4 space-x-4 mt-4">
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>This page</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>Mnemonic Component</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>Encryption Component</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>Hashing Component</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>File Encryption Component</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>encryption.ts</Link>
-                        <Link className={`text-sm hover:underline underline-offset-2`} href={"#"}>bip.ts</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/(app)/encryption/page.tsx"}>This page</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/components/encryption/Mnemonic.tsx"}>Mnemonic Component</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/components/encryption/Encryption.tsx"}>Encryption Component</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/components/encryption/Hashing.tsx"}>Hashing Component</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/components/encryption/FileEncryption.tsx"}>File Encryption Component</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/lib/crypto/encrypt.ts"}>encrypt.ts</Link>
+                        <Link className={`text-sm hover:underline underline-offset-2`} href={"https://github.com/DoffySo/fluent/blob/main/src/app/lib/crypto/bip.ts"}>bip.ts</Link>
                     </div>
                 </div>
             </div>
