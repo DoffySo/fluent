@@ -23,7 +23,7 @@ interface HeaderBurgerProps {
     links: ILinks[]
 }
 
-export default function HeaderBurger({links}) {
+export default function HeaderBurger({links}: HeaderBurgerProps) {
     const user = useUserStore((state) => state.user);
     const { theme, setTheme } = useTheme()
 

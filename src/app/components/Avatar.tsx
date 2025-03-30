@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 interface AvatarProps {
-    src: string | ""
+    src?: string | ""
     alt: string | "Avatar"
-    width: number | 46
-    height: number | 46
+    width?: number | 46
+    height?: number | 46
     fallbackLetters: string
 }
 

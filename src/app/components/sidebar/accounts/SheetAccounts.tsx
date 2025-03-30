@@ -7,12 +7,7 @@ import {useUserStore} from "@/app/stores/user";
 
 export default function SheetAccounts() {
     const currentUser = useUserStore(state => state.user);
-    const getInitials = (user: any) => {
-        const { first_name, last_name, username, email } = user;
-        if(!first_name && !last_name && !username && !email) return "null";
-        if (first_name) return `${first_name[0]}${last_name ? last_name[0] : ""}`.toUpperCase();
-        return (username || email )[0].toUpperCase();
-    };
+
 
     return(
         <>
@@ -26,7 +21,7 @@ export default function SheetAccounts() {
                                     <AvatarImage
                                         src="https://github.com/shaddcn.png"/>
                                     <AvatarFallback className={"border border-muted-foreground"}>
-                                        {getInitials(currentUser)}
+                                        FL
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-col">
@@ -37,9 +32,9 @@ export default function SheetAccounts() {
                         </AccordionTrigger>
                         <AccordionContent className={"flex flex-col"}>
                             <SheetAccount current user_id={1} />
-                            <SheetAccount user_id={2} />
-                            <SheetAccount user_id={3} />
-                            <SheetAccount user_id={4} />
+                            <SheetAccount user_id={2} current={false} />
+                            <SheetAccount user_id={3} current={false} />
+                            <SheetAccount user_id={4} current={false} />
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>

@@ -5,8 +5,6 @@ import {useChatStore} from "@/app/stores/chat";
 import Image from 'next/image'
 import TextareaAutosize from 'react-textarea-autosize';
 import {ChatContext} from "@/app/components/chat/ChatContext";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {decryptMessage, encryptMessage, generateRSAKeys} from "@/app/lib/crypto";
 import ChatHeader from "@/app/components/chat/ChatHeader";
 
 const initialContextMenu = {
@@ -15,7 +13,7 @@ const initialContextMenu = {
     y: 0,
 }
 
-export default function Chat({chatid}: {chatid?: number}) {
+export default function Chat({chatid}: {chatid?: number | null}) {
     const [selectedChat, setSelectedChat] = useState<number | null>(null);
     const [contextMenu, setContextMenu] = useState(initialContextMenu);
 
@@ -23,7 +21,8 @@ export default function Chat({chatid}: {chatid?: number}) {
 
     const setCurrentChatId = useChatStore(state => state.setId)
 
-    function handleContextMenu(e) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function handleContextMenu(e: any) {
         e.preventDefault();
         console.log(e)
 
@@ -36,15 +35,6 @@ export default function Chat({chatid}: {chatid?: number}) {
     function closeContextMenu() {
         console.log(1)
         setContextMenu({show: false, x: 0, y: 0});
-    }
-
-    async function genRSA() {
-        const {publicKey, privateKey} = await generateRSAKeys();
-        const message = "Hello, World!"
-        const encryptedMessage = await encryptMessage(message, publicKey);
-        const decryptedMessage = await decryptMessage(encryptedMessage, privateKey);
-        console.log(`Public Key: \n${publicKey}\n\nPrivate Key: \n${privateKey}`);
-        console.log(`Encrypted Message: \n${encryptedMessage}\n\nDecrypted Message: \n${decryptedMessage}`);
     }
 
     return (

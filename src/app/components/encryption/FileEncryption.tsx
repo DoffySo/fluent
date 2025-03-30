@@ -33,11 +33,11 @@ export default function FileEncryptionComponent() {
 
     const handleEncryptFile = async () => {
         const encryptedFile = await encryptFilePreview(file!, Base64ToUint(publicKey))
-        setEncryptedFileUint(encryptedFile)
+        setEncryptedFileUint(Base64ToUint(encryptedFile))
     }
     const handleDecryptFile = async () => {
         const decryptedFile = await decryptFilePreview(encryptedFile!, Base64ToUint(privateKey), Base64ToUint(publicKey))
-        setDecryptedFileUint(decryptedFile)
+        setDecryptedFileUint(Base64ToUint(decryptedFile))
     }
 
 
@@ -86,11 +86,11 @@ export default function FileEncryptionComponent() {
                 </div>
                 <div className={`flex space-x-1`}>
                     <span>Encrypted:</span>
-                    <TextareaAutosize maxRows={12} className={`resize-none w-100 outline-none`} value={encryptedFileUint} disabled/>
+                    <TextareaAutosize maxRows={12} className={`resize-none w-100 outline-none`} value={UintToBase64(encryptedFileUint!)} disabled/>
                 </div>
                 <div className={`flex space-x-1`}>
                     <span>Decrypted:</span>
-                    <TextareaAutosize maxRows={12} className={`resize-none w-100 outline-none`} value={decryptedFileUint} disabled/>
+                    <TextareaAutosize maxRows={12} className={`resize-none w-100 outline-none`} value={UintToBase64(decryptedFileUint!)} disabled/>
                 </div>
             </div>
         </>

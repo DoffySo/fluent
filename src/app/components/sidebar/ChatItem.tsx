@@ -2,7 +2,7 @@ import Avatar from "@/app/components/Avatar";
 import {useChatStore} from "@/app/stores/chat";
 
 
-export default function ChatItem({chatid, collapsed, name, text, folders} : {chatid: number, collapsed: boolean, name: string, text: string, folders: string[]}) {
+export default function ChatItem({chatid, collapsed, name, text, folders} : {chatid: number, collapsed?: boolean, name: string, text: string, folders?: string[]}) {
 
     const currentChatId = useChatStore(state => state.id)
     const setCurrentChatId = useChatStore(state => state.setId)
@@ -17,7 +17,7 @@ export default function ChatItem({chatid, collapsed, name, text, folders} : {cha
             <div onClick={()=>selectChat(chatid)} className="chatitem flex w-full h-18 cursor-default bg-muted/10 hover:bg-muted-foreground/30 active:bg-muted-foreground/30 px-1 rounded-md">
                 <div className="chatitem-container w-full h-full flex my-auto">
                     <div className={`avatar-container min-w-16 w-16 h-16 flex p-2 my-auto ${collapsed ? "mx-auto md:w-16 md:h-16 lg:w-18 lg:h-18 sm:h-12 sm:w-12" : ""}`}>
-                        <Avatar fallbackLetters={"CH"} />
+                        <Avatar fallbackLetters={"CH"} alt={"CH"} />
                     </div>
                     { !collapsed &&
                     <div className="content-container w-full h-18 border-b border-accent flex flex-col overflow-x-hidden text-ellipsis">

@@ -49,7 +49,7 @@ export default function MnemonicComponent() {
                         mnemonic</Button>}
                     {customMnemonic &&
                         <Button variant={`default`} onClick={() => handleUpdateMnemonic()} size={"sm"}>Update</Button>}
-                    <Button variant={`${customMnemonic ? '' : 'outline'}`} onClick={() => handleCustomMnemonic()}
+                    <Button variant={`${customMnemonic ? 'default' : 'outline'}`} onClick={() => handleCustomMnemonic()}
                             size={"sm"}>Custom mnemonic</Button>
                 </div>
                 <div className={`flex space-x-1`}>
@@ -68,7 +68,7 @@ export default function MnemonicComponent() {
                 </div>
                 <div className={`flex space-x-1`}>
                     <span>Validation:</span>
-                    <TextareaAutosize className={`resize-none w-100 outline-none`} value={mnemonicValidate} disabled/>
+                    <TextareaAutosize className={`resize-none w-100 outline-none`} value={`${mnemonicValidate}`} disabled/>
                 </div>
             </div>
         </>

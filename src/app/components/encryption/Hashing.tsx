@@ -66,7 +66,7 @@ export default function HashingComponent() {
                 </div>
                 <div className={`flex space-x-1`}>
                     <span>Verify:</span>
-                    <TextareaAutosize className={`resize-none w-100 outline-none`} value={passwordVerify} disabled/>
+                    <TextareaAutosize className={`resize-none w-100 outline-none`} value={`${passwordVerify}`} disabled/>
                 </div>
             </div>
         </>

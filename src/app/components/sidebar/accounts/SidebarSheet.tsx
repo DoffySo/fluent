@@ -6,7 +6,6 @@ import SheetAccounts from "@/app/components/sidebar/accounts/SheetAccounts";
 import {useTheme} from "next-themes";
 import {DialogTitle} from "@radix-ui/react-dialog";
 import {useEffect, useState} from "react";
-import {getSession} from "@/app/lib/session";
 import {useUserStore} from "@/app/stores/user";
 
 export default function SidebarSheet() {
@@ -21,24 +20,12 @@ export default function SidebarSheet() {
             setTheme("dark")
         }
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async function getUser() {
             const { first_name, last_name, username, email, phone_number } = user;
             setUsername(first_name ? `${first_name} ${last_name || ""}`.trim() : username || email);
             if (phone_number) setPhone(phone_number);
     }
-
-    useEffect(() => {
-        getUser();
-    }, []);
-
-    // Get initials for AvatarFallback
-    const getInitials = (user: any) => {
-        const { first_name, last_name, username, email } = user;
-        if(!first_name && !last_name && !username && !email) return "null";
-        if (first_name) return `${first_name[0]}${last_name ? last_name[0] : ""}`.toUpperCase();
-        return (username || email )[0].toUpperCase();
-    };
 
     return(
         <>

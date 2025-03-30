@@ -34,7 +34,7 @@ export default function AuthForm() {
 
 
 
-    const handleEmail = (value) => {
+    const handleEmail = (value: string) => {
         setEmail(value.trim())
 
         setEmailEmpty(false)
@@ -47,7 +47,7 @@ export default function AuthForm() {
             setEmailInvalid(true);
         }
     }
-    const handlePassword = (value) => {
+    const handlePassword = (value: string) => {
         setPassword(value);
 
         setPasswordEmpty(false)

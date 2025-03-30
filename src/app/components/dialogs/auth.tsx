@@ -23,15 +23,15 @@ import AuthForm from "@/app/components/dialogs/AuthForm";
 
 
 interface IProps {
-    isMobile: boolean | undefined;
-    signIn: boolean | true;
-    forceShow: boolean | true;
-    isSmall: boolean | false;
-    text: string | undefined;
-    textWeight: string | undefined;
-    icon: string | undefined;
-    iconWidth: number | 21;
-    iconHeight: number | 21;
+    isMobile?: boolean | undefined;
+    signIn?: boolean | true;
+    forceShow?: boolean | true;
+    isSmall?: boolean | false;
+    text?: string | undefined;
+    textWeight?: string | undefined;
+    icon?: string | undefined;
+    iconWidth?: number | 21;
+    iconHeight?: number | 21;
 }
 
 export default function AuthDialog({isMobile, signIn, forceShow, text, textWeight, icon, iconWidth, iconHeight} : IProps) {

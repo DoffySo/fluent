@@ -2,11 +2,8 @@
 import Link from "next/link";
 import {Icon} from "@iconify/react";
 import {Button} from "@/components/ui/button";
-// import {useGSAP} from "@gsap/react";
-// import {useRef} from "react";
 import { useTheme } from 'next-themes'
 import {useEffect, useState} from "react";
-import {getSession} from "@/app/lib/session";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useUserStore} from "@/app/stores/user";
 import Image from 'next/image'

@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from '@/app/components/ThemeProvider';
-import { Providers } from "@/app/providers";
 import { useUserStore } from "@/app/stores/user";
-import { getSession } from "@/app/lib/session";
-import { UserProvider } from "@/app/context/UserProvider";
 import { Toaster } from "@/components/ui/sonner"
 import {createClient} from "@/app/utils/supabase/server";
 import InitUser from "@/app/lib/store/InitUser";

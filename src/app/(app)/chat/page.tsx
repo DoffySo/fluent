@@ -3,11 +3,9 @@
 // import {ThemeProvider} from "next-themes";
 import Sidebar from '@/app/components/sidebar/sidebar'
 import Chat from '@/app/components/chat/Chat'
-import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels";
 import {useEffect, useState} from "react";
 import {useChatStore} from "@/app/stores/chat";
 import {useViewport} from "@/app/hooks/useViewport";
-import {getSession} from "@/app/lib/session";
 import {useUserStore} from "@/app/stores/user";
 
 export default function App() {

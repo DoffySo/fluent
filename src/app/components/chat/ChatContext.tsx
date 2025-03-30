@@ -9,10 +9,10 @@ interface ChatContextProps {
     closeContextMenu: () => void
 }
 interface ContextButtonProps {
-    icon: string | undefined,
-    text: string | undefined,
-    variant: string | undefined,
-    size: "xs" | "sm" | "md" | "lg" | "xl" | undefined,
+    icon?: string | undefined,
+    text?: string | undefined,
+    variant?: string | undefined,
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | undefined,
 }
 
 function ContextButton({icon, text, variant, size}: ContextButtonProps) {
@@ -51,7 +51,7 @@ export function ChatContext({chatid, x, y, closeContextMenu}: ChatContextProps) 
                 <div className="chatcontext-container flex flex-col w-full">
                     <ul className="actions flex flex-col gap-1 text-md font-normal">
                         <div className="actions-read flex py-1 border-b border-gray-300">
-                            <ContextButton size={"xs"} icon={"solar:check-read-outline"} text={"read at 00:00"} />
+                            <ContextButton size={"xs"} icon={"solar:check-read-outline"} text={"read at 00:00"}/>
                         </div>
                         <div className="actions-primary border-b border-gray-300 flex flex-col pb-1 gap-1">
                             <ContextButton icon={"fluent:arrow-reply-48-regular"} text={"Reply"} />

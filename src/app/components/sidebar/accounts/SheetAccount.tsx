@@ -10,6 +10,7 @@ interface AccountTypes {
 }
 
 export default function SheetAccount({ current, user_id }: AccountTypes) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [user, setUser] = useState<any>(null);
     const [username, setUsername] = useState<string | null>(null);
     const [phone, setPhone] = useState<string | null>(null);
@@ -47,6 +48,7 @@ export default function SheetAccount({ current, user_id }: AccountTypes) {
     }, [user_id]);
 
     // Get initials for AvatarFallback
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const getInitials = (user: any) => {
         const { first_name, last_name, username, email } = user;
         if(!first_name && !last_name && !username && !email) return "null";

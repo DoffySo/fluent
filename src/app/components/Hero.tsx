@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import {getSession} from "@/app/lib/session";
 import {Icon} from '@iconify/react'
 import {Button} from "@/components/ui/button";
 import {redirect} from "next/navigation";

@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { getSession } from "@/app/lib/session";
 
 type User = {
     id: number              | null;
@@ -48,17 +47,17 @@ export const useUserStore = create<StoreType>()(
             },
             setUser: (user) => set({ user }),
             fetchUser: async () => {
-                const session = await getSession();
-                if (session?.user_id) {
-                    const res = await fetch(`/api/user/${session.user_id.toString()}`);
-                    if (res.ok) {
-                        const {user} = await res.json();
-
-                        set({ user });
-                    } else {
-                        console.error("Failed to fetch user data:", res.statusText);
-                    }
-                }
+                // const session = {};
+                // if (session?.user_id) {
+                //     const res = await fetch(`/api/user/${session.user_id.toString()}`);
+                //     if (res.ok) {
+                //         const {user} = await res.json();
+                //
+                //         set({ user });
+                //     } else {
+                //         console.error("Failed to fetch user data:", res.statusText);
+                //     }
+                // }
             },
         }),
         {
