@@ -8,228 +8,259 @@ datasource db {
   directUrl = env("PRISMA_DIRECT_URL")
 }
 
-model ServerData {
-  id            Int       @id @default(autoincrement())
-  settings_name String?
-  public_key    String?
-  created_at    DateTime?
-  edited_at     DateTime?
+model User {
+  id                       String     @id @default(uuid())
+  // User Defaults
+  email                    String     @unique
+  password                 String
+  firstName                String
+  lastName                 String?
+  username                 String?     @unique
+  phoneNumber              String?
+  profilePhoto             String?
+  status                   UserStatus @default(userStatusEmpty) // Current online status of the user
+  // User Style
+  accentColorId            Int?       @default(-1) // -1 - None | Identifier of the accent color for name, and backgrounds of profile photo, reply header, and link preview
+  backgroundEmojiId        Int?       @default(0) // 0 - None | Identifier of a custom emoji to be shown on the reply header and link preview background
+  profileAccent_colorId    Int?       @default(-1) // -1 - None | Identifier of a custom emoji to be shown on the reply header and link preview background
+  profileBackgroundEmojiId Int?       @default(0) // 0 - None | Identifier of a custom emoji to be shown on the background of the user's profile
+  emojiStatus              Int?       @default(-1) // 0 - None | Emoji status to be shown instead of the default Fluent Premium badge
+  // User other
+  isPremium                Boolean    @default(false)
+  premiumTill              DateTime   @default(now())
+  isSupport                Boolean    @default(false)
+  restictedTo              DateTime?
+  restictedReason          String? // If non-empty, it contains a human-readable description of the reason why access to this user must be restricted
+  // Other
+  lastOnline               DateTime   @default(now())
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @updatedAt
+
+  // Relations
+  UserPrivacy          UserPrivacy[] // Privacy settings (who sees what)
+  UserBlacklist        UserBlocklist[]        @relation("UserBlocklist_User") // List of blocked users
+  UserProfilePhoto     UserProfilePhoto[] // History of profile photos
+  UserPrivacyException UserPrivacyException[] // Privacy exceptions (whitelist/blacklist)
+  UserBlocklist        UserBlocklist[]        @relation("UserBlocklist_BlockedUser")
+  UserAutoDelete       UserAutoDelete[]
+  ChatUserPermissions  ChatUserPermissions[]
+  UserChat             UserChat[]
+  Chat                 Chat?                  @relation("ChatParticipants", fields: [chatId], references: [id])
+  chatId               String?
+  Message              Message[]
+  Session Session[]
 }
 
-model User {
-  id                        Int                    @id @default(autoincrement())
-  email                     String                 @unique
-  password                  String?
-  public_key                String                 @unique
-  created_at                DateTime?              @default(now())
-  last_seen                 DateTime?
-  first_name                String?
-  last_name                 String?
-  username                  String?                @unique
-  bio                       String?
-  birthday                  DateTime?
-  phone_number              String?                @unique
-  is_premium                Boolean?
-  is_support                Boolean?
-  is_admin                  Boolean?
-  chat_member               ChatMember[]           @relation("chat_member")
-  created_chats             Chats[]                @relation("chat_owner")
-  messages                  Message[]              @relation("message_sender")
-  privacy                   UserPrivacy?
-  exceptions_targeted_at_me UserPrivacyException[] @relation("privacy_exception_target")
-  sessions                  UserSessions[]         @relation("user_sessions")
-  settings                  UserSettings?
+model UserProfilePhoto {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  photoUrl   String
+  is_current Boolean  @default(false) // This field shows whether the photo is the current one
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model UserPrivacy {
-  id                              Int                    @id @default(autoincrement())
-  user_id                         Int                    @unique
-  allow_calls                     Boolean                @default(true)
-  allow_chat_invites              Boolean                @default(true)
-  allow_finding_by_phone_number   Boolean                @default(true)
-  allow_peer_to_peer_calls        Boolean                @default(false)
-  allow_voice_and_video_messages  Boolean                @default(true)
-  autosave_gifts                  Boolean                @default(false)
-  show_bio                        Boolean                @default(true)
-  show_birthday                   Boolean                @default(true)
-  show_link_in_forwarded_messages Boolean                @default(true)
-  show_phone_number               Boolean                @default(true)
-  hide_read_time                  Boolean                @default(false)
-  user                            User                   @relation(fields: [user_id], references: [id])
-  exceptions                      UserPrivacyException[]
+  id                   String                 @id @default(uuid())
+  user                 User                   @relation(fields: [userId], references: [id])
+  userId               String
+  type                 PrivacyType // What kind of data privacy is applied
+  visibility           PrivacyLevel           @default(EVERYONE) // Who can see this information
+  UserPrivacyException UserPrivacyException[] // Exceptions for this privacy setting
 }
 
 model UserPrivacyException {
-  id             Int          @id @default(autoincrement())
-  privacy_id     Int?
-  target_user_id Int?
-  field          String?
-  value          Boolean?
-  privacy        UserPrivacy? @relation(fields: [privacy_id], references: [id])
-  target_user    User?        @relation("privacy_exception_target", fields: [target_user_id], references: [id])
-
-  @@unique([privacy_id, target_user_id, field])
+  id        String        @id @default(uuid())
+  privacy   UserPrivacy   @relation(fields: [privacyId], references: [id], onDelete: Cascade)
+  privacyId String
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  type      ExceptionType // Exception type (WHITELIST/BLACKLIST)
 }
 
-model UserSettings {
-  id                                Int     @id @default(autoincrement())
-  user_id                           Int     @unique
-  private_show_message_notification Boolean @default(true)
-  private_show_message_previews     Boolean @default(true)
-  group_show_message_notification   Boolean @default(true)
-  group_show_message_previews       Boolean @default(true)
-  channel_show_message_notification Boolean @default(true)
-  channel_show_message_previews     Boolean @default(true)
-  user                              User    @relation(fields: [user_id], references: [id])
+model UserBlocklist {
+  id            String @id @default(uuid())
+  userId        String
+  user          User   @relation("UserBlocklist_User", fields: [userId], references: [id])
+  blockedUserId String
+  blocked       User   @relation("UserBlocklist_BlockedUser", fields: [blockedUserId], references: [id])
+
+  @@unique([userId, blockedUserId])
 }
 
-model UserSessions {
-  id         Int      @id @default(autoincrement())
-  user_id    Int
-  token      String   @unique
-  created_at DateTime @default(now())
-  expires_at DateTime
-  user       User     @relation("user_sessions", fields: [user_id], references: [id])
+// Auto Delete Messages
+model UserAutoDelete {
+  id         String            @id @default(uuid())
+  user       User              @relation(fields: [userId], references: [id])
+  userId     String
+  deleteType MessageAutoDelete @default(DONT_DELETE)
+  // If deleteType = CUSTOM
+  deleteTime Int?              @default(1)
+  timeUnit   AutoDeleteUnits   @default(DAY)
+}
+
+model UserChat {
+  id     String    @id @default(uuid())
+  chat   Chat      @relation(fields: [chatId], references: [id])
+  chatId String
+  user   User      @relation(fields: [userId], references: [id])
+  userId String
+  role   ChatRoles @default(MEMBER)
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+
+// --- Chats
+model Chat {
+  id                    String                @id @default(uuid())
+  title                 String
+  type                  ChatTypes
+  photo                 String?
+  ChatPermissions       ChatPermissions[]
+  chatUserPermissionsId String?
+  ChatUserPermissions   ChatUserPermissions[] @relation("ChatUserPermissions")
+  UserChat              UserChat[]
+  participants          User[]                @relation("ChatParticipants")
+  Message               Message[]
 }
 
 model Message {
-  id              Int                 @id @default(autoincrement())
-  sender_type     MessageSenderType
-  sender_user_id  Int?
-  sender_chat_id  Int?
-  sending_state   MessageState?
-  sheduling_state MessageState?
-  is_pinned       Boolean?
-  can_be_saved    Boolean?
-  is_channel_post Boolean?
-  date            DateTime?
-  edit_date       DateTime?
-  content_type    MessageContentType?
-  content         Json?
-  sender_chat     Chats?              @relation(fields: [sender_chat_id], references: [id])
-  sender_user     User?               @relation("message_sender", fields: [sender_user_id], references: [id])
-}
-
-model Chats {
-  id             Int              @id @default(autoincrement())
-  owner_id       Int?
-  title          String?
-  photo          String?
-  permissions_id Int?
-  chat_type      ChatType
-  owner          User?            @relation("chat_owner", fields: [owner_id], references: [id])
-  permissions    ChatPermissions? @relation(fields: [permissions_id], references: [id])
-  messages       Message[]
-  members        ChatMember[]     @relation("ChatMemberToChats")
-}
-
-model ChatMember {
-  id                   Int                   @id @default(autoincrement())
-  user_id              Int?
-  joined_at            DateTime?
-  custom_title         String?
-  is_admin             Boolean               @default(false)
-  admin_permissions_id Int?
-  admin_permissions    ChatAdminPermissions? @relation(fields: [admin_permissions_id], references: [id])
-  user                 User?                 @relation("chat_member", fields: [user_id], references: [id])
-  chat                 Chats[]               @relation("ChatMemberToChats")
+  id               String     @id @default(uuid())
+  chat             Chat       @relation(fields: [chatId], references: [id])
+  chatId           String
+  sender           User       @relation(fields: [userId], references: [id])
+  userId           String
+  text             String?
+  mediaUrl         String?
+  mediaType        MediaTypes
+  forwardedFrom    Message?   @relation("ForwardedMessages", fields: [forwardedFromId], references: [id])
+  forwardedFromId  String?
+  forwardedTo      Message[]  @relation("ForwardedMessages")
+  isForwarded      Boolean    @default(false)
+  originalSenderId String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 }
 
 model ChatPermissions {
-  id                      Int     @id @default(autoincrement())
-  can_send_basic_messages Boolean @default(true)
-  can_send_other_messages Boolean @default(true)
-  can_send_audio_files    Boolean @default(true)
-  can_send_documents      Boolean @default(true)
-  can_send_photos         Boolean @default(true)
-  can_send_video_notes    Boolean @default(true)
-  can_send_audio_notes    Boolean @default(true)
-  can_send_polls          Boolean @default(true)
-  can_change_info         Boolean @default(true)
-  can_invite_users        Boolean @default(true)
-  can_pin_messages        Boolean @default(true)
-  chat                    Chats[]
+  id                   String  @id @default(uuid())
+  Chat                 Chat    @relation(fields: [chatId], references: [id])
+  chatId               String
+  canSendBasicMessages Boolean @default(true)
+  canSendAudios        Boolean @default(true)
+  canSendDocuments     Boolean @default(true)
+  canSendPhotos        Boolean @default(true)
+  canSendVideos        Boolean @default(true)
+  canSendVideoNotes    Boolean @default(true)
+  canSendAudioNotes    Boolean @default(true)
+  canSendPolls         Boolean @default(true)
+  canSendOtherMessaged Boolean @default(true)
+  canChangeInfo        Boolean @default(true)
+  canInviteUsers       Boolean @default(true)
+  canPinMessages       Boolean @default(true)
+
+  @@unique([chatId])
 }
 
-model ChatAdminPermissions {
-  id                     Int          @id @default(autoincrement())
-  can_manage_chat        Boolean      @default(false)
-  can_change_info        Boolean      @default(false)
-  can_post_message       Boolean      @default(false)
-  can_delete_message     Boolean      @default(false)
-  can_invite_users       Boolean      @default(false)
-  can_restrict_users     Boolean      @default(false)
-  can_promote_users      Boolean      @default(false)
-  can_manage_video_chats Boolean      @default(false)
-  is_anonymous           Boolean      @default(false)
-  member                 ChatMember[]
+model ChatUserPermissions {
+  id                   String  @id @default(uuid())
+  Chat                 Chat    @relation("ChatUserPermissions", fields: [chatId], references: [id])
+  chatId               String
+  user                 User    @relation(fields: [userId], references: [id])
+  canSendBasicMessages Boolean @default(true)
+  canSendAudios        Boolean @default(true)
+  canSendDocuments     Boolean @default(true)
+  canSendPhotos        Boolean @default(true)
+  canSendVideos        Boolean @default(true)
+  canSendVideoNotes    Boolean @default(true)
+  canSendAudioNotes    Boolean @default(true)
+  canSendPolls         Boolean @default(true)
+  canSendOtherMessaged Boolean @default(true)
+  canChangeInfo        Boolean @default(true)
+  canInviteUsers       Boolean @default(true)
+  canPinMessages       Boolean @default(true)
+  userId               String
+
+  @@unique([chatId, userId])
 }
 
-enum ChatType {
+// Enums
+enum PrivacyLevel {
+  EVERYONE // Everyone can see
+  NO_ONE // No one can see
+  CONTACTS // Only contacts can see (not yet implemented)
+}
+
+enum ExceptionType {
+  WHITELIST // Exception for NO_ONE (allow some users)
+  BLACKLIST // Exception for EVERYONE (hide from some users)
+}
+
+enum PrivacyType {
+  PHONE_NUMBER
+  LAST_SEEN
+  PROFILE_PHOTO
+  ABOUT
+  BIRTH_DATE
+  FORWARDING_MESSAGES
+  CALLS
+  VOICE_MESSAGES // And Video Messages
+  MESSAGES
+  INVITES
+}
+
+enum MessageAutoDelete {
+  DONT_DELETE
+  ONE_DAY
+  ONE_WEEK
+  ONE_MONTH
+  CUSTOM
+}
+
+enum AutoDeleteUnits {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+enum UserStatus {
+  userStatusEmpty
+  userStatusLongTime
+  userStatusLastMonth
+  userStatusLastWeek
+  userStatusOffline
+  userStatusOnline
+  userStatusRecently
+}
+
+enum ChatTypes {
   PRIVATE
   GROUP
   CHANNEL
 }
 
-enum MessageState {
-  NULL
-  SENDING
-  SENDED
-  FAILED
+enum ChatRoles {
+  OWNER
+  ADMIN
+  MEMBER
 }
 
-enum ScheduledMessageState {
-  NULL
-  WAITING
-  SENDED
-  FAILED
-}
-
-enum MessageSenderType {
-  USER
-  CHAT
-}
-
-enum MessageContentType {
+enum MediaTypes {
   TEXT
-  PHOTO
-  VIDEO
   AUDIO
+  VIDEO
   DOCUMENT
-  STICKER
-  CONTACT
-  LOCATION
-  POLL
-  GAME
-  WEB_APP
-  VOICE_NOTE
-  VIDEO_NOTE
-  ANIMATION
-  DICE
-  INVOICE
-  PAYMENT_SUCCESSFUL
-  PAYMENT_REFUNDED
-  GIFT
-  PREMIUM_GIFT_CODE
-  CHAT_CREATED
-  CHAT_TITLE_CHANGED
-  CHAT_PHOTO_CHANGED
-  CHAT_MEMBER_JOINED
-  CHAT_MEMBER_LEFT
-  CHAT_UPGRADED_TO
-  CHAT_UPGRADED_FROM
-  PIN_MESSAGE
-  FORUM_TOPIC_CREATED
-  FORUM_TOPIC_EDITED
-  FORUM_TOPIC_CLOSED
-  FORUM_TOPIC_HIDDEN
-  MESSAGE_REACTION
-  MESSAGE_EDITED
-  MESSAGE_DELETED
-  MESSAGE_FORWARD
-  MESSAGE_REPLY
-  MESSAGE_MENTION
-  MESSAGE_QUOTE
-  MESSAGE_SCHEDULED
-  MESSAGE_UNSUPPORTED
+  IMAGE
 }

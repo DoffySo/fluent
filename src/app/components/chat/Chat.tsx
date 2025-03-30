@@ -65,7 +65,7 @@ export default function Chat({chatid}: {chatid?: number}) {
                             </div>
                         </div>
 
-                        <div className="chat-footer w-full border-t border-accent min-h-16 h-auto bg-background/20 absolute z-[5000] bottom-0 backdrop-blur-[3px] items-center flex">
+                        <div className="chat-footer w-full border-t border-accent min-h-16 h-auto bg-background/20 absolute z-40 bottom-0 backdrop-blur-[3px] items-center flex">
                             <div className="chat-footer__container px-1 flex gap-2 items-center h-full w-full">
                                 <div className="btn attach flex hover:cursor-pointer hover:bg-neutral-400/30 p-1 rounded-full">
                                     <Icon icon="fluent:attach-48-filled" width="24" height="24" />

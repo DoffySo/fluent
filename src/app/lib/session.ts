@@ -1,86 +1,76 @@
-"use server";
+import { prisma } from "./prisma";
+import { randomUUID } from "crypto";
+import { serialize } from "cookie";
+import { NextRequest, NextResponse } from "next/server";
 
-import { cookies } from "next/headers";
-import { prisma } from "@/app/lib/prisma";
-import { randomBytes } from "node:crypto";
+const SESSION_COOKIE_NAME = "session_id";
+const SESSION_LIFETIME = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-const generateToken = async () => randomBytes(32).toString("hex");
 
-export async function createSession(user_id: number) {
-    const token = await generateToken();
-    const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30); // 30 days
+export async function createSession(userId: string, req: NextRequest, res: NextResponse) {
+    const sessionId = randomUUID();
+    const expiresAt = new Date(Date.now() + SESSION_LIFETIME);
 
-    const user = await prisma.user.findFirst({
-        where: {
-            id: user_id,
-        },
-        select: {
-            id: true,
-            email: true,
-        }
-    })
-    if(!user) return null;
-
-    const session = await prisma.userSessions.create({
+    await prisma.session.create({
         data: {
-            token, expires_at,
-            user: {
-                connect: {
-                    id: user.id,
-                    email: user.email
-                }
-            }
-        }
-    });
-
-    const cookieStore = await cookies();
-    cookieStore.set("session", token, {
-        httpOnly: true,
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30 // 30 days (in seconds)
-    });
-
-    return session;
-}
-
-export async function getSession() {
-    const cookieStore = await cookies();
-    const session_token = cookieStore.get("session")?.value;
-    if (!session_token) return null;
-
-    const session = await prisma.userSessions.findFirst({
-        where: {
-            token: session_token
+            userId,
+            token: sessionId,
+            expiresAt,
+            ipAddress: req.ip || "unknown",
+            userAgent: req.headers.get("user-agent"),
         },
-        select: {
-            user: {
-                select: {
-                    id: true,
-                    email: true
-                }
-            },
-            user_id: true,
-            token: true
-        }
     });
 
-    if (!session) return null;
-
-    return session;
+    res.headers.append(
+        "Set-Cookie",
+        serialize(SESSION_COOKIE_NAME, sessionId, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            expires: expiresAt,
+        })
+    );
 }
 
-export async function deleteSession() {
-    const cookieStore = await cookies();
-    const session_token = cookieStore.get("session")?.value;
-    if (!session_token) return;
 
-    try {
-        await prisma.userSessions.deleteMany({
-            where: { token: session_token }
-        });
-    } catch (err) {
-        console.warn("Session already deleted or not found", err);
+export async function getSession(req: NextRequest) {
+    const sessionId = req.cookies.get(SESSION_COOKIE_NAME)?.value;
+    if (!sessionId) return null;
+
+    const session = await prisma.session.findUnique({
+        where: { token: sessionId },
+        include: { user: true },
+    });
+
+    if (!session || session.expiresAt < new Date()) {
+        return null;
     }
 
-    cookieStore.set("session", "", { httpOnly: true, path: "/", maxAge: 0 });
+    return session;
+}
+
+
+export async function destroySession(req: NextRequest, res: NextResponse) {
+    const sessionId = req.cookies.get(SESSION_COOKIE_NAME)?.value;
+
+    if (sessionId) {
+        await prisma.session.deleteMany({ where: { token: sessionId } });
+    }
+
+    res.headers.append(
+        "Set-Cookie",
+        serialize(SESSION_COOKIE_NAME, "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            expires: new Date(0),
+        })
+    );
+}
+
+
+export async function destroyAllSessions(userId: string) {
+    await prisma.session.deleteMany({ where: { userId } });
 }

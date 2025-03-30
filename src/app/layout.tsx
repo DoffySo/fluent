@@ -6,6 +6,9 @@ import { Providers } from "@/app/providers";
 import { useUserStore } from "@/app/stores/user";
 import { getSession } from "@/app/lib/session";
 import { UserProvider } from "@/app/context/UserProvider";
+import { Toaster } from "@/components/ui/sonner"
+import {createClient} from "@/app/utils/supabase/server";
+import InitUser from "@/app/lib/store/InitUser";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -28,22 +31,8 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const session = await getSession();
-    let initialUser = null;
-
-    if (session?.user_id) {
-        const baseUrl =
-            process.env.NODE_ENV === "development"
-                ? process.env.NEXT_DEV_BASE_URL
-                : process.env.NEXT_BASE_URL;
-        const res = await fetch(`${baseUrl}/api/user/${session.user_id}`, {
-            cache: "no-store",
-        });
-        if (res.ok) {
-            const { user } = await res.json();
-            initialUser = user;
-        }
-    }
+    const supabase = await createClient()
+    const {data} = await supabase.auth.getSession();
 
 
     return (
@@ -57,9 +46,9 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <UserProvider initialUser={initialUser}>
                 {children}
-            </UserProvider>
+                <Toaster position={"bottom-center"} expand richColors />
+                <InitUser user={data.session?.user} />
         </ThemeProvider>
         </body>
         </html>

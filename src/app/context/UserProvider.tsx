@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/app/stores/user";
+import {User} from "@supabase/auth-js";
 
-export function UserProvider({ initialUser, children }: { initialUser: any, children: React.ReactNode }) {
+export function UserProvider({user, children}: {
+    children: React.ReactNode,
+    user?: User | undefined
+}) {
     const setUser = useUserStore((state) => state.setUser);
     const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
-        if (initialUser) {
-            setUser(initialUser);
+        if (user) {
+            setUser(user);
         }
         setIsHydrated(true);
-    }, [initialUser, setUser]);
+    }, [user, setUser]);
 
     if (!isHydrated) return null;
 

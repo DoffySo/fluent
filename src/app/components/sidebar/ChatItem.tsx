@@ -8,7 +8,8 @@ export default function ChatItem({chatid, collapsed, name, text, folders} : {cha
     const setCurrentChatId = useChatStore(state => state.setId)
 
     function selectChat(id: number) {
-        setCurrentChatId(id)
+        setCurrentChatId(null)
+        setTimeout(()=> setCurrentChatId(id))
     }
 
     return (

@@ -1,99 +1,57 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion";
-import {Icon} from "@iconify/react";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {useChatStore} from "@/app/stores/chat";
-import {useState} from "react";
-
+import { Icon } from "@iconify/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useChatStore } from "@/app/stores/chat";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function ChatHeader() {
     const setCurrentChatId = useChatStore(state => state.setId);
-    const [opened, setOpened] = useState<boolean>(false);
+    const [opened, setOpened] = useState(false);
 
-    function toggleInfo() {
-        setOpened(!opened);
+    function openHeader() {
+        return setOpened(true)
+    }
+    function handleBack() {
+        return opened ? setOpened(false) : setCurrentChatId(null);
     }
 
     return (
-        <motion.div
-            initial={false}
-            animate={{ height: opened ? "100vh" : "64px" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="chat-header w-full absolute top-0 bg-background/20 backdrop-blur-lg text-foreground border-b border-accent"
-        >
-            <div className="chat-header__container w-full bg-background flex flex-col">
-                {/* Верхний блок */}
-                <div className={`flex items-center px-4 py-2 ${opened ? "flex-col" : "flex-row md:flex-row"}`}>
-                    <motion.button
-                        onClick={toggleInfo}
-                        initial={false}
-                        animate={{ width: opened ? "100%" : "auto" }}
-                        transition={{ duration: 0.3 }}
-                        className="text-primary flex items-center space-x-1"
-                    >
-                        <Icon icon="fluent:chevron-left-48-filled" width="28" height="28" />
-                        {opened && <span className="text-md font-medium">Back</span>}
-                    </motion.button>
+        <>
+            <div
+                className={`chat-header w-full absolute top-0 bg-background/20 backdrop-blur-[3px] text-foreground ${opened ? 'h-full backdrop-blur-none z-50 bg-background/100' : 'bg-background/20 border-b border-accent'}`}>
+                <div
+                    className={`chat-header__container w-full flex items-center h-16 relative`}>
+                    <div onClick={() => openHeader()} className="background h-full w-full absolute z-10 hover:bg-muted-foreground/13 hover:cursor-default"></div>
+                    <div className="foreground px-2 flex items-center gap-2 justify-between md:justify-start h-full w-full">
+                        <div
+                            className={`back z-20 h-fit items-center w-fit items-center flex hover:cursor-pointer hover:bg-neutral-400/30 rounded-full relative overflow-hidden`}
+                            onClick={() => handleBack()}>
+                            <Icon icon="fluent:chevron-left-48-filled" width="21" height="21"/>
+                        </div>
+                        <div
+                            className={`avatar z-20 w-12 h-12 order-3 md:order-0`}>
+                            <Avatar className={`w-full h-full`}>
+                                <AvatarImage src={"https://github.com/shadcn.png"} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </div>
+                        <div className={`user z-20 flex flex-col duration-100 w-fit items-center md:items-start ${opened ? 'items-center' : ''}`}>
+                            <div className="user-username w-fit flex">
+                                Acme Inc.
+                            </div>
+                            <div className={`user-status w-fit text-xs text-muted-foreground flex`}>
+                                Offline
+                            </div>
+                        </div>
+                    </div>
 
-                    <motion.div
-                        initial={false}
-                        animate={{ opacity: opened ? 1 : 1 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className={`flex items-center ${opened ? "flex-col mt-4" : "md:flex-row md:space-x-4"}`}
-                    >
-                        <Avatar className="w-12 h-12">
-                            <AvatarImage src="https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png" />
-                            <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        <motion.div
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="text-center md:text-left"
-                        >
-                            <span className="text-sm">Username</span>
-                            <br />
-                            <span className="text-xs text-gray-400">status</span>
-                        </motion.div>
-                    </motion.div>
                 </div>
-
-                {/* Кнопки при открытии */}
-                <AnimatePresence>
-                    {opened && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
-                            className="flex justify-center gap-6 mt-6"
-                        >
-                            {[
-                                { icon: "fluent:call-48-filled", label: "Call" },
-                                { icon: "fluent:video-48-filled", label: "Video" },
-                                { icon: "fluent:alert-48-filled", label: "Mute" },
-                                { icon: "fluent:search-48-filled", label: "Search" },
-                                { icon: "fluent:more-horizontal-48-filled", label: "More" }
-                            ].map((item, index) => (
-                                <motion.div
-                                    key={item.label}
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                                    className="flex flex-col items-center bg-secondary p-3 rounded-lg shadow-md cursor-pointer hover:bg-secondary/80 transition"
-                                >
-                                    <Icon icon={item.icon} width="24" height="24" />
-                                    <span className="text-xs mt-1">{item.label}</span>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
-        </motion.div>
-    );
+        </>
+    )
 }
 
 
