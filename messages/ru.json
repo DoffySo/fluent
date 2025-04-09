@@ -1,0 +1,21 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from ru!",
+	"err_msg": "Ой, кажется произошла ошибка...",
+	"err_btn": "Верните меня назад",
+	"signin": "Авторизоваться",
+	"hero_hello": "Hello, Fluent",
+	"whyus_title": "Почему нас?",
+	"whyus_desc": "Мы предоставляем платформу с открытым исходным кодом и постоянно развиваемся, чтобы обеспечить вам наилучший опыт.",
+	"privacy_policy": "Политика конфиденциальности",
+	"tos": "Условия предоставления услуг",
+	"link_home": "Главная",
+	"link_faq": "FAQ",
+	"link_apps": "Приложения",
+	"link_feedback": "Обратная связь",
+	"header_alert_title": "В разработке.",
+	"header_alert_desc": "Оставляйте отзывы о новом сайте в этой",
+	"header_alert_link": "Форме",
+	"encryption_test_title": "Тесты шифрования",
+	"encryption_test_desc": "Здесь вы можете проверить нашу систему шифрования"
+}

@@ -1,0 +1,21 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from en!",
+	"err_msg": "Damn, there seems to be a mistake...",
+	"err_btn": "Move me back",
+	"signin": "Sign In",
+	"hero_hello": "Hello, Fluent",
+	"whyus_title": "Why us?",
+	"whyus_desc": "We provide an open-source platform and are constantly evolving to bring you the best experience.",
+	"privacy_policy": "Privacy Policy",
+	"tos": "Terms Of Service",
+	"link_home": "Home",
+	"link_faq": "FAQ",
+	"link_apps": "Apps",
+	"link_feedback": "Feedback",
+	"header_alert_title": "Under construction.",
+	"header_alert_desc": "Give us feedback on the new website in this",
+	"header_alert_link": "Form",
+	"encryption_test_title": "Encryption tests",
+	"encryption_test_desc": "Here you can test our encryption system"
+}
