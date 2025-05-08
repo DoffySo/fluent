@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                      String  @id @default(uuid())
+  firstName               String?
+  lastName                String?
+  email                   String  @unique
+  username                String? @unique
+  phone                   String? @unique
+  passwordHash            String
+  isVerified              Boolean @default(false)
+  isPremium               Boolean @default(false)
+  isSupport               Boolean @default(false)
+  isAdmin                 Boolean @default(false)
+  encryptedPhraseToVerify String? // This field contains the encrypted phrase. For example, we encrypt the text “hello” with the user's public and private keys.
+
+  // Realtions.
+  Session              Session[]
+  ProfilePhotos        ProfilePhoto[]
+  ChatParticipant      ChatParticipant[]
+  ownedChats           Chat[]            @relation(name: "ChatOwner")
+  chatsWithLastMessage Chat[]            @relation(name: "ChatLastMessageFrom")
+  ChatFolders          ChatFolders[]
+  ChatFolderItem       ChatFolderItem[]
+
+  // some useless info xd
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProfilePhoto {
+  id        String  @id @default(uuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  imagePath String // Path in Supabase Storage, eg: avatars/user123/photo1.png
+  isCurrent Boolean @default(false)
+
+  // some useless info xd
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  //
+
+  @@unique([userId, isCurrent], map: "one_current_photo_per_user")
+  @@index([userId])
+}
+
+model Chat {
+  id String @id @default(uuid())
+
+  participants ChatParticipant[]
+  type         ChatTypes         @default(private)
+
+  ownerId String
+  owner   User   @relation("ChatOwner", fields: [ownerId], references: [id])
+
+  lastMessageFromId String?
+  lastMessageFrom   User?   @relation("ChatLastMessageFrom", fields: [lastMessageFromId], references: [id])
+
+  lastMessageText  String?
+  isVerified       Boolean          @default(false)
+  isHadCustomBadge Boolean?         @default(false)
+  customBadgePath  String?
+  isScam           Boolean?         @default(false)
+  isSpam           Boolean?         @default(false)
+  isFake           Boolean?         @default(false)
+  ChatFolderItem   ChatFolderItem[]
+
+  // some useless info xd
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatParticipant {
+  id         String  @id @default(uuid())
+  chat       Chat    @relation(fields: [chatId], references: [id])
+  chatId     String
+  user       User    @relation(fields: [userId], references: [id])
+  userId     String
+  isPinned   Boolean @default(false)
+  isMuted    Boolean @default(false)
+  isArchived Boolean @default(false)
+
+  // some useless info xd
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  //
+
+  @@unique([chatId, userId])
+}
+
+model ChatFolders {
+  id     String           @id @default(uuid())
+  name   String
+  userId String
+  user   User             @relation(fields: [userId], references: [id])
+  items  ChatFolderItem[]
+
+  // some useless info xd
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatFolderItem {
+  id       String @id @default(uuid())
+  chatId   String
+  folderId String
+  userId   String
+
+  chat   Chat        @relation(fields: [chatId], references: [id])
+  folder ChatFolders @relation(fields: [folderId], references: [id])
+  user   User        @relation(fields: [userId], references: [id])
+
+  // some useless info xd
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  //
+
+  @@unique([chatId, folderId, userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  sessionToken String   @unique
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+}
+
+enum ChatTypes {
+  private
+  group
+  channel
+}
