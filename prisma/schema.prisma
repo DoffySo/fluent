@@ -21,6 +21,8 @@ model User {
   isSupport               Boolean @default(false)
   isAdmin                 Boolean @default(false)
   encryptedPhraseToVerify String? // This field contains the encrypted phrase. For example, we encrypt the text “hello” with the user's public and private keys.
+  encryptedPhraseNonce    String? @default("")
+  publicKey               String? @default("")
 
   // Realtions.
   Session              Session[]
@@ -34,6 +36,8 @@ model User {
   // some useless info xd
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ChatMessages ChatMessages[]
 }
 
 model ProfilePhoto {
@@ -64,6 +68,7 @@ model Chat {
   lastMessageFromId String?
   lastMessageFrom   User?   @relation("ChatLastMessageFrom", fields: [lastMessageFromId], references: [id])
 
+  title            String?
   lastMessageText  String?
   isVerified       Boolean          @default(false)
   isHadCustomBadge Boolean?         @default(false)
@@ -76,6 +81,8 @@ model Chat {
   // some useless info xd
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ChatMessages ChatMessages[]
 }
 
 model ChatParticipant {
@@ -94,6 +101,21 @@ model ChatParticipant {
   //
 
   @@unique([chatId, userId])
+}
+
+model ChatMessages {
+  id     String @id @default(uuid())
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  message      String
+  ogMessage    String?
+  messageNonce String    @default("")
+  editedAt     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model ChatFolders {

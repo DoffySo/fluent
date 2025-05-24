@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { serialize } from 'cookie' // Добавь библиотеку cookie, если она не подключена
+import { serialize } from 'cookie'
 
 const jwtSecret = process.env.JWT_SECRET
 
@@ -60,12 +60,11 @@ export async function authUserAction(prevState: any, formData: FormData) {
                 }
             })
 
-            // Здесь добавлен код для работы с cookies
             cookies().set('sessionToken', sessionToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Strict',
-                maxAge: 365 * 24 * 60 * 60, // 1 год
+                maxAge: 365 * 24 * 60 * 60,
                 path: '/',
             })
 
@@ -79,7 +78,7 @@ export async function authUserAction(prevState: any, formData: FormData) {
         const hashedPassword = bcrypt.hashSync(password, 10)
         const newUser = await prisma.user.create({
             data: {
-                firstName: email, // Ты можешь изменить это, чтобы добавить реальное имя
+                firstName: email,
                 email: email,
                 passwordHash: hashedPassword,
             }
@@ -91,7 +90,7 @@ export async function authUserAction(prevState: any, formData: FormData) {
             data: {
                 userId: newUser.id,
                 sessionToken,
-                expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 365 дней
+                expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 365 days
             }
         })
 
@@ -99,7 +98,7 @@ export async function authUserAction(prevState: any, formData: FormData) {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 365 * 24 * 60 * 60, // 1 год
+            maxAge: 365 * 24 * 60 * 60, // 1 year
             path: '/',
         })
 
