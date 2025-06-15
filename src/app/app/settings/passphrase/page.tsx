@@ -27,8 +27,7 @@ export default function AppPassphrase() {
                                 Passphrase
                             </span>
                         </div>
-                        <div className={"flex items-center text-center justify-end font-bold w-full"}>
-                            <Button className={"text-md"} size={"sm"} variant={"link"}>Edit</Button>
+                        <div className={"flex items-center text-center justify-end w-full"}>
                         </div>
                     </header>
                     <main className={"page-hero px-4"}>

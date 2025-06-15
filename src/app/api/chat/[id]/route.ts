@@ -40,6 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                 type: 'private',
                 id: chat.id,
                 name: `${other.user.firstName} ${other.user.lastName ?? ''}`.trim(),
+                userId: other.user.id,
                 status: 'unknown',
             });
         }

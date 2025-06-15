@@ -16,44 +16,20 @@ model User {
   username                String? @unique
   phone                   String? @unique
   passwordHash            String
-  isVerified              Boolean @default(false)
-  isPremium               Boolean @default(false)
-  isSupport               Boolean @default(false)
-  isAdmin                 Boolean @default(false)
   encryptedPhraseToVerify String? // This field contains the encrypted phrase. For example, we encrypt the text “hello” with the user's public and private keys.
   encryptedPhraseNonce    String? @default("")
   publicKey               String? @default("")
 
   // Realtions.
   Session              Session[]
-  ProfilePhotos        ProfilePhoto[]
   ChatParticipant      ChatParticipant[]
   ownedChats           Chat[]            @relation(name: "ChatOwner")
-  chatsWithLastMessage Chat[]            @relation(name: "ChatLastMessageFrom")
-  ChatFolders          ChatFolders[]
-  ChatFolderItem       ChatFolderItem[]
-
   // some useless info xd
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ChatMessages ChatMessages[]
-}
-
-model ProfilePhoto {
-  id        String  @id @default(uuid())
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  imagePath String // Path in Supabase Storage, eg: avatars/user123/photo1.png
-  isCurrent Boolean @default(false)
-
-  // some useless info xd
-  createdAt DateTime  @default(now())
-  deletedAt DateTime?
-  //
-
-  @@unique([userId, isCurrent], map: "one_current_photo_per_user")
-  @@index([userId])
+  ChatMessages    ChatMessages[]
+  MessageRead     MessageRead[]
 }
 
 model Chat {
@@ -65,24 +41,14 @@ model Chat {
   ownerId String
   owner   User   @relation("ChatOwner", fields: [ownerId], references: [id])
 
-  lastMessageFromId String?
-  lastMessageFrom   User?   @relation("ChatLastMessageFrom", fields: [lastMessageFromId], references: [id])
-
   title            String?
-  lastMessageText  String?
-  isVerified       Boolean          @default(false)
-  isHadCustomBadge Boolean?         @default(false)
-  customBadgePath  String?
-  isScam           Boolean?         @default(false)
-  isSpam           Boolean?         @default(false)
-  isFake           Boolean?         @default(false)
-  ChatFolderItem   ChatFolderItem[]
 
   // some useless info xd
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ChatMessages ChatMessages[]
+  ChatMessages    ChatMessages[]
+  MessageRead     MessageRead[]
 }
 
 model ChatParticipant {
@@ -91,9 +57,6 @@ model ChatParticipant {
   chatId     String
   user       User    @relation(fields: [userId], references: [id])
   userId     String
-  isPinned   Boolean @default(false)
-  isMuted    Boolean @default(false)
-  isArchived Boolean @default(false)
 
   // some useless info xd
   createdAt DateTime @default(now())
@@ -110,43 +73,31 @@ model ChatMessages {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  message      String
-  ogMessage    String?
-  messageNonce String    @default("")
-  editedAt     DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  message         String
+  ogMessage       String?
+  pinned          Boolean?
+  messageNonce    String            @default("")
+  editedAt        DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  MessageRead     MessageRead[]
 }
 
-model ChatFolders {
-  id     String           @id @default(uuid())
-  name   String
-  userId String
-  user   User             @relation(fields: [userId], references: [id])
-  items  ChatFolderItem[]
+model MessageRead {
+  id        String       @id @default(uuid())
+  chat      Chat         @relation(fields: [chatId], references: [id])
+  chatId    String
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String
+  message   ChatMessages @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String
 
-  // some useless info xd
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([messageId, userId])
 }
 
-model ChatFolderItem {
-  id       String @id @default(uuid())
-  chatId   String
-  folderId String
-  userId   String
-
-  chat   Chat        @relation(fields: [chatId], references: [id])
-  folder ChatFolders @relation(fields: [folderId], references: [id])
-  user   User        @relation(fields: [userId], references: [id])
-
-  // some useless info xd
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  //
-
-  @@unique([chatId, folderId, userId])
-}
 
 model Session {
   id           String   @id @default(uuid())

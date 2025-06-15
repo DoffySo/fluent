@@ -17,9 +17,6 @@ export async function GET(req: NextRequest) {
                     },
                 },
             },
-            include: {
-                participants: true,
-            },
         })
 
         return NextResponse.json(chats)

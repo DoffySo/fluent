@@ -25,8 +25,6 @@ export default function Hero() {
                             <div className="flex flex-col w-full md:w-2/3">
                                 <AuthDialog buttonClassName={'font-bold text-lg py-6 px-6 w-full md:max-w-96 md:mx-auto'} buttonSize={"lg"}
                                             buttonText={"Let's Get Started"} buttonVariant={"default"}/>
-                                <Button className={'text-md mt-2 md:max-w-96 md:mx-auto'} variant={'link'} size={'lg'}>Continue in
-                                    Russian</Button>
                             </div>
                         </div>
                     </div>

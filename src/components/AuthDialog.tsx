@@ -51,8 +51,6 @@ export default function AuthDialog({buttonText = "Sign In", buttonVariant = "out
     const isMobile = useMediaQuery("(max-width: 768px)");
     const [formState, formAction] = useActionState(authUserAction, INITIAL_STATE)
 
-    console.log(formState, "client")
-
     const handleAuth = () => {
         setWaitingAuth(true);
     }
@@ -73,11 +71,6 @@ export default function AuthDialog({buttonText = "Sign In", buttonVariant = "out
                                 </DrawerHeader>
                                 <div className={`min-h-48 w-2/3 flex mx-auto`}>
                                     <div className="flex flex-col gap-2 w-full">
-                                        <div className="via-oauth flex flex-col gap-1 w-full">
-                                            <Button disabled={isWaitingAuth} variant={'outline'}>Continue with GitHub</Button>
-                                            <Button disabled={isWaitingAuth} variant={'outline'}>Continue with Google</Button>
-                                        </div>
-                                        <Separator className={`my-1`} />
                                         <div className="via-email pb-2 flex flex-col gap-3 w-full">
                                             <form action={formAction}>
                                                 <div className="email flex flex-col gap-2 py-2">
@@ -141,13 +134,6 @@ export default function AuthDialog({buttonText = "Sign In", buttonVariant = "out
                             </DialogHeader>
                             <div className={`w-2/3 flex mx-auto`}>
                                 <div className="flex flex-col gap-2 w-full">
-                                    <div className="via-oauth flex flex-col gap-1 w-full">
-                                        <Button disabled={isWaitingAuth} variant={'outline'}>Continue with
-                                            GitHub</Button>
-                                        <Button disabled={isWaitingAuth} variant={'outline'}>Continue with
-                                            Google</Button>
-                                    </div>
-                                    <Separator className={`my-1`}/>
                                     <div className="via-email pb-2 flex flex-col gap-3 w-full">
                                         <form action={formAction}>
                                             <div className="email flex flex-col gap-2 py-2">

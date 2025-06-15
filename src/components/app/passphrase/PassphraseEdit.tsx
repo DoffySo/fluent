@@ -128,8 +128,8 @@ export function PassphraseEdit() {
                     filter: `id=eq.${user?.id}`,
                 },
                 async (payload) => {
-                    const {encryptedPhraseToVerify} = payload.new
-                    setDbMnemonic(encryptedPhraseToVerify)
+                    const e = payload.new
+                    setDbMnemonic(e.encryptedPhraseToVerify)
                 }
             )
             .subscribe()

@@ -33,12 +33,6 @@ export default function SidebarHeader() {
                                     <span>Chats</span>
                                 </div>
                                 <div className={"flex items-center justify-end gap-2"}>
-                                    <Button size={"icon"} variant={"ghost"}>
-                                        <CircleFadingPlus className={"min-h-5 min-w-5"}/>
-                                    </Button>
-                                    <Button size={"icon"} variant={"ghost"}>
-                                        <SquarePen className={"min-h-5 min-w-5"}/>
-                                    </Button>
                                 </div>
                             </div>
                             <SidebarSearch />
@@ -55,6 +49,7 @@ export default function SidebarHeader() {
                             </div>
                             <SidebarSearch />
                             <SidebarChatFolders />
+
                         </header>
                     </>
                 )
