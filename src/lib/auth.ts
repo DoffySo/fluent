@@ -22,9 +22,6 @@ export async function getCurrentUser() {
                 lastName: true,
                 username: true,
                 phone: true,
-                isAdmin: true,
-                isSupport: true,
-                isVerified: true,
                 publicKey: true,
             },
         })
@@ -49,9 +46,6 @@ export async function getCurrentUserFromRequest(req: NextRequest) {
                 lastName: true,
                 username: true,
                 phone: true,
-                isAdmin: true,
-                isSupport: true,
-                isVerified: true,
                 publicKey: true,
             },
         })

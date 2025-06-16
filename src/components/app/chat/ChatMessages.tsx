@@ -89,7 +89,7 @@ export default function ChatMessages({ id }: IProps) {
                         try {
                             content = decryptMessage(msg.messageNonce, msg.message, Base64ToUint(pubKey), privateKeyRef.current)
                         } catch {
-                            content = '[decryption error]'
+                            content = "[decryption error]"
                         }
                     }
 

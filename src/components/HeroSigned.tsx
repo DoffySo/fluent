@@ -4,14 +4,25 @@ import AuthDialog from "@/components/AuthDialog";
 import {Button} from "@/components/ui/button";
 import {useEffect, useState} from "react";
 import Link from "next/link";
+import { useUserStore } from "@/stores/user";
 
 export default function HeroSigned() {
     const [isLoaded, setIsLoaded] = useState(false);
     const isMounted = useIsMounted()
+    const setUser = useUserStore(state => state.setUser)
 
     useEffect(() => {
         if(isMounted()) setIsLoaded(true);
     }, [isMounted])
+
+    const handleLogout = async () => {
+        const res = await fetch('/api/me/logout', {method: 'post'})
+        console.log(res)
+        if(res.ok) {
+            setUser(null);
+            window.location.reload();
+        }
+    }
 
     return (
         <>
@@ -27,7 +38,7 @@ export default function HeroSigned() {
                                 <Button className={"text-lg font-bold w-fit p-0 mx-auto"} size={"lg"}>
                                     <Link className={"w-full flex px-4"} href={"/app"}>Continue in Fluent</Link>
                                 </Button>
-                                <Button className={'text-md mt-2 md:max-w-96 md:mx-auto'} variant={'link'} size={'lg'}>Log Out</Button>
+                                <Button onClick={handleLogout} className={'text-md mt-2 md:max-w-96 md:mx-auto'} variant={'link'} size={'lg'}>Log Out</Button>
                             </div>
                         </div>
                     </div>

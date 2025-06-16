@@ -41,9 +41,9 @@ export default function SidebarSearchList() {
         <>
             <div className="flex w-full px-2 py-2">
                 <div className="flex flex-col w-full gap-6">
-
-                    {search?.value}
-
+                    {searchResults?.users?.length < 1 && (
+                        <span>Searching...</span>
+                    )}
 
                     {searchResults?.users?.length > 0 && (
                         <div className="users">

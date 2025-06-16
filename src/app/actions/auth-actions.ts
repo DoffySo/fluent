@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { serialize } from 'cookie'
 
-const jwtSecret = process.env.JWT_SECRET
+const jwtSecret = process.env.JWT_SECRET || ""
 
 const authSchema = z.object({
     email: z.string().email({
