@@ -78,7 +78,7 @@ export default function SidebarChat({ chatId }: IChatProps) {
             return;
         }
 
-        const socket = getSocket(user.id); // Get the singleton socket instance
+        const socket = getSocket(user.id);
 
         const handleUserTyping = (chatId: string, typingUserId: string) => {
             console.log(`User ${typingUserId} is now typing | Sidebar`);
@@ -119,6 +119,7 @@ export default function SidebarChat({ chatId }: IChatProps) {
                 const { data: ChatParticipant } = await supabase
                     .from('ChatParticipant')
                     .select('*')
+                    .eq('chatId', chatId)
                     .neq('userId', user?.id);
 
                 const { data: Participant} = await supabase

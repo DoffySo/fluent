@@ -33,7 +33,7 @@ export default function SidebarScrollable() {
         fetchUserChats();
 
         const participantChanges = supabase
-            .channel('chat_participant_changes')
+            .channel(`chat_${user.id}_participant_changes`)
             .on(
                 'postgres_changes',
                 {
@@ -61,7 +61,7 @@ export default function SidebarScrollable() {
             .subscribe();
 
         const chatChanges = supabase
-            .channel('chat_updates')
+            .channel(`chat_${user.id}_updates`)
             .on(
                 'postgres_changes',
                 {
@@ -94,8 +94,10 @@ export default function SidebarScrollable() {
     return (
         <div className="sidebar-chats h-full w-full max-w-full overflow-y-auto overflow-x-hidden">
             <div className="sidebar-chats__container w-full max-w-full flex flex-col gap-1">
-                {chats.map((chat) => (
-                    <SidebarChat key={chat.id} chatId={chat.id} />
+                {chats.map((chat, id) => (
+                    <>
+                        <SidebarChat key={id} chatId={chat.id} />
+                    </>
                 ))}
             </div>
         </div>
